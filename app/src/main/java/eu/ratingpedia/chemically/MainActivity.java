@@ -13,6 +13,8 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -77,7 +79,7 @@ public class MainActivity extends Activity {
             Log.i("info",name);
             int id = getResources().getIdentifier(name, "drawable",getPackageName());
             Log.i("info",""+id);
-            elements[i-1] = BitmapFactory.decodeResource(getResources(),id);
+            elements[i-1] = BitmapFactory.decodeResource(getResources(), id);
         }
     }
 
@@ -128,6 +130,71 @@ public class MainActivity extends Activity {
         }
 
         private void controlFPS() {
-        } 
+            long timeThisFrame = (System.currentTimeMillis()-lastFrameTime);
+            long timeToSleep = 500 - timeThisFrame;
+            if(timeThisFrame > 0){
+                fps = (int) (1000 / timeThisFrame);
+            }
+            if (timeToSleep > 0){
+                try{
+                    ourThread.sleep(timeToSleep);
+                }catch (InterruptedException e){
+
+                }
+            }
+            lastFrameTime = System.currentTimeMillis();
+        }
+
+        public void pause(){
+            playingElements = false;
+            try{
+                ourThread.join();
+            }catch (InterruptedException e){
+
+            }
+        }
+
+        public void resume(){
+            playingElements = true;
+            ourThread = new Thread(this);
+            ourThread.start();
+        }
+
+        @Override
+        public boolean onTouchEvent(MotionEvent motionEvent){
+            startActivity(i);
+            return true;
+        }
+    }
+
+    @Override
+    protected void onStop(){
+        super.onStop();
+        while(true){
+            elementsAnimate.pause();
+            break;
+        }
+        finish();
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        elementsAnimate.resume();
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+        elementsAnimate.pause();
+    }
+
+    public boolean onKeyDown(int keyCode,KeyEvent event){
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            elementsAnimate.pause();
+            finish();
+            return true;
+        }
+        return false;
     }
 }
