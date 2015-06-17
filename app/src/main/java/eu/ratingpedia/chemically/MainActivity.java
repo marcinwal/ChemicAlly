@@ -41,11 +41,12 @@ public class MainActivity extends Activity {
     int blockSize;
     int numBlocksWidth;
     int numBlocksHeight;
+    int [] title;
 
 
 
 
-    Intent i;//starting hte game with touch screen
+    Intent myIntent;//starting hte game with touch screen
 
 
 
@@ -56,7 +57,7 @@ public class MainActivity extends Activity {
         configDisplay();
         loadElements();
         scaleElements();
-
+        title = new int[]{6,2,0,20,53,53,39};
         mediaPlayer = MediaPlayer.create(this,R.raw.music1);
         mediaPlayer.start();
 
@@ -65,7 +66,7 @@ public class MainActivity extends Activity {
         setContentView(elementsAnimate);
 
 
-        i = new Intent(this,GameActivity.class);
+        myIntent = new Intent(this,GameActivity.class);
 
     }
 
@@ -83,29 +84,28 @@ public class MainActivity extends Activity {
         Log.i("sizex",""+screenWidth);
         Log.i("sizey",""+screenHeight);
 
-        numBlocksWidth = 15;
+        numBlocksWidth = 11;
         blockSize = screenWidth / numBlocksWidth;
         numBlocksHeight = screenHeight / blockSize;
 
     }
 
     private void loadElements() {
-       for(int i=1; i < numberOfElements+1;i++){
+       for(int i=0; i < elements.length;i++){
             String name;
             name = "elem"+Integer.toString(i);
             int id = getResources().getIdentifier(name, "drawable",getPackageName());
-            elements[i-1] = BitmapFactory.decodeResource(getResources(), id);
-        }
+           elements[i] = BitmapFactory.decodeResource(getResources(), id);
+       }
     }
 
     private void scaleElements(){
-        for(int i = 0;i < numberOfElements;i++){
-            try {
+        for(int i = 0;i < elements.length;i++){
+            //try {
                 elements[i] = Bitmap.createScaledBitmap(elements[i], blockSize, blockSize, false);
-                Log.i("info", "" + i);
-            }catch(Exception e) {
-                Log.e("", "error: " + e.toString());
-            }
+            //}catch(Exception e) {
+            //    Log.e("", "error: " + e.toString());
+            //}
         }
     }
 
@@ -150,7 +150,10 @@ public class MainActivity extends Activity {
                 paint.setColor(Color.argb(255, 184, 138, 0));
                 paint.setTextSize(150);
                 canvas.drawText("ChemicAlly", 50, 150, paint);
-                canvas.drawBitmap(elements[0],150,150,paint);
+                int offset = 2;
+                for (int i = 0; i < title.length;i++){
+                    canvas.drawBitmap(elements[title[i]],(offset+i)*blockSize,screenHeight/2-blockSize/2,paint);
+                }
 
                 ourHolder.unlockCanvasAndPost(canvas);
             }
@@ -192,9 +195,14 @@ public class MainActivity extends Activity {
 
         @Override
         public boolean onTouchEvent(MotionEvent motionEvent){
-            startActivity(i);
-            mediaPlayer.release();
+            try {
+                startActivity(myIntent);
+                mediaPlayer.release();
+            }catch(Exception e){
+                Log.e("","error:"+e.toString());
+            }
             return true;
+
         }
     }
 
