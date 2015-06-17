@@ -38,7 +38,12 @@ public class MainActivity extends Activity {
 
     long lastFrameTime;
     int fps;
-    int hi;
+    int blockSize;
+    int numBlocksWidth;
+    int numBlocksHeight;
+
+
+
 
     Intent i;//starting hte game with touch screen
 
@@ -47,18 +52,10 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Display display = getWindowManager().getDefaultDisplay();
 
-        Point size = new Point();
-        display.getSize(size);
-
-        numberOfElements = 60;
-        elements = new Bitmap[numberOfElements];
-
-        screenWidth = size.x;
-        screenHeight = size.y;
-
+        configDisplay();
         loadElements();
+        scaleElements();
 
         mediaPlayer = MediaPlayer.create(this,R.raw.music1);
         mediaPlayer.start();
@@ -72,16 +69,47 @@ public class MainActivity extends Activity {
 
     }
 
+    private void configDisplay(){
+        Display display = getWindowManager().getDefaultDisplay();
+
+        Point size = new Point();
+        display.getSize(size);
+
+        numberOfElements = 60;
+        elements = new Bitmap[numberOfElements];
+
+        screenWidth = size.x;
+        screenHeight = size.y;
+        Log.i("sizex",""+screenWidth);
+        Log.i("sizey",""+screenHeight);
+
+        numBlocksWidth = 15;
+        blockSize = screenWidth / numBlocksWidth;
+        numBlocksHeight = screenHeight / blockSize;
+
+    }
+
     private void loadElements() {
-       for(int i=1; i < numberOfElements;i++){
+       for(int i=1; i < numberOfElements+1;i++){
             String name;
             name = "elem"+Integer.toString(i);
-            Log.i("info",name);
             int id = getResources().getIdentifier(name, "drawable",getPackageName());
-            Log.i("info",""+id);
             elements[i-1] = BitmapFactory.decodeResource(getResources(), id);
         }
     }
+
+    private void scaleElements(){
+        for(int i = 0;i < numberOfElements;i++){
+            try {
+                elements[i] = Bitmap.createScaledBitmap(elements[i], blockSize, blockSize, false);
+                Log.i("info", "" + i);
+            }catch(Exception e) {
+                Log.e("", "error: " + e.toString());
+            }
+        }
+    }
+
+
 
 
     private class ElementsAnimate extends SurfaceView implements Runnable {
@@ -118,11 +146,11 @@ public class MainActivity extends Activity {
             if(ourHolder.getSurface().isValid()){
                 canvas = ourHolder.lockCanvas();
 
-                canvas.drawColor(Color.BLUE);
-                paint.setColor(Color.argb(255, 255, 255, 255));
+                canvas.drawColor(Color.DKGRAY);
+                paint.setColor(Color.argb(255, 184, 138, 0));
                 paint.setTextSize(150);
-                canvas.drawText("BURAKI!", 10, 50, paint);
-
+                canvas.drawText("ChemicAlly", 50, 150, paint);
+                canvas.drawBitmap(elements[0],150,150,paint);
 
                 ourHolder.unlockCanvasAndPost(canvas);
             }
@@ -148,6 +176,7 @@ public class MainActivity extends Activity {
         public void pause(){
             playingElements = false;
             try{
+                mediaPlayer.release();
                 ourThread.join();
             }catch (InterruptedException e){
 
@@ -158,11 +187,13 @@ public class MainActivity extends Activity {
             playingElements = true;
             ourThread = new Thread(this);
             ourThread.start();
+            mediaPlayer.start();
         }
 
         @Override
         public boolean onTouchEvent(MotionEvent motionEvent){
             startActivity(i);
+            mediaPlayer.release();
             return true;
         }
     }

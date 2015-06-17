@@ -8,6 +8,8 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:name=".MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
@@ -17,6 +19,8 @@
             </intent-filter>
         </activity>
         <activity
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:name=".GameActivity"
             android:label="@string/title_activity_game" >
         </activity>
