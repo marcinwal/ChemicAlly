@@ -95,6 +95,7 @@ public class MainActivity extends Activity {
             paint = new Paint();
             frameWidth = elements[0].getWidth();
             frameHeight = elements[0].getHeight();
+
         }
 
         @Override
