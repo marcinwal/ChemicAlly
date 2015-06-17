@@ -1,17 +1,30 @@
 package eu.ratingpedia.chemically;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Point;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Display;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 
+import java.text.DecimalFormat;
 
 
 public class MainActivity extends Activity {
 
     MediaPlayer mediaPlayer;
+    int numberOfElements;
+
+    ElementsAnimate elementsAnimate;
 
     Canvas canvas;
     Bitmap [] elements;
@@ -19,23 +32,101 @@ public class MainActivity extends Activity {
     int frameWidth;
 
     int screenWidth;
-    int getScreenHeight;
+    int screenHeight;
 
     long lastFrameTime;
     int fps;
     int hi;
 
-    Intent i;//strating hte game with touch screen
+    Intent i;//starting hte game with touch screen
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        Display display = getWindowManager().getDefaultDisplay();
+
+        Point size = new Point();
+        display.getSize(size);
+
+        numberOfElements = 60;
+        elements = new Bitmap[numberOfElements];
+
+        screenWidth = size.x;
+        screenHeight = size.y;
+
+        loadElements();
 
         mediaPlayer = MediaPlayer.create(this,R.raw.music1);
         mediaPlayer.start();
+
+
+        elementsAnimate = new ElementsAnimate(this);
+        setContentView(elementsAnimate);
+
+
+        i = new Intent(this,GameActivity.class);
+
+    }
+
+    private void loadElements() {
+       for(int i=1; i < numberOfElements;i++){
+            String name;
+            name = "elem"+Integer.toString(i);
+            Log.i("info",name);
+            int id = getResources().getIdentifier(name, "drawable",getPackageName());
+            Log.i("info",""+id);
+            elements[i-1] = BitmapFactory.decodeResource(getResources(),id);
+        }
     }
 
 
+    private class ElementsAnimate extends SurfaceView implements Runnable {
+
+        Thread ourThread = null;
+        SurfaceHolder ourHolder;
+        volatile boolean playingElements;
+        Paint paint;
+
+        public ElementsAnimate(Context context) {
+            super(context);
+            ourHolder = getHolder();
+            paint = new Paint();
+            frameWidth = elements[0].getWidth();
+            frameHeight = elements[0].getHeight();
+        }
+
+        @Override
+        public void run() {
+            while(playingElements){
+                drawElements();
+                controlFPS();
+            }
+        }
+
+        private void placeRandomly() {
+        }
+
+        private void drawElements() {
+
+            //paint.setShader(new LinearGradient(0, 0, 0, getHeight(), Color.BLACK, Color.WHITE, Shader.TileMode.MIRROR));
+
+            if(ourHolder.getSurface().isValid()){
+                canvas = ourHolder.lockCanvas();
+
+                canvas.drawColor(Color.BLUE);
+                paint.setColor(Color.argb(255, 255, 255, 255));
+                paint.setTextSize(150);
+                canvas.drawText("BURAKI!", 10, 50, paint);
+
+
+                ourHolder.unlockCanvasAndPost(canvas);
+            }
+            
+        }
+
+        private void controlFPS() {
+        } 
+    }
 }
