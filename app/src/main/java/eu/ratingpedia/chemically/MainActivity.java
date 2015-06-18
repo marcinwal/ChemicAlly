@@ -44,6 +44,7 @@ public class MainActivity extends Activity {
     int numBlocksWidth;
     int numBlocksHeight;
     int [] title;
+    int titleScale = 150; //100 normal
 
 
 
@@ -104,11 +105,10 @@ public class MainActivity extends Activity {
 
     private void scaleElements(){
         for(int i = 0;i < elements.length;i++){
-            if (i == 0 || i == 2 || i == 6 || i == 20 || i == 39 || i == 53) {
-                elements[i] = Bitmap.createScaledBitmap(elements[i], blockSize, blockSize, false);
+            if (i == 0 || i == 2 || i == 6 || i == 20 || i == 39 || i == 53) { //to Change but not looping
+                elements[i] = Bitmap.createScaledBitmap(elements[i],(int)(blockSize*titleScale)/100, (int)(blockSize*titleScale)/100, false);
             }else{
                 elements[i] = Bitmap.createScaledBitmap(elements[i], blockSize/2, blockSize/2, false);
-                Log.i("scaleSmaller:",""+i);
             }
         }
     }
@@ -151,13 +151,16 @@ public class MainActivity extends Activity {
                 canvas = ourHolder.lockCanvas();
 
                 canvas.drawColor(Color.DKGRAY);
-                elementsBackgroud();
+                //elementsBackgroud();
+                //elementsTestDraw();
+                elementsTestGrid();
                 paint.setColor(Color.argb(255, 184, 138, 0));
                 paint.setTextSize(150);
-                canvas.drawText("ChemicAlly", 50, 150, paint);
-                int offset = 2;
+                //canvas.drawText("ChemicAlly", 50, 150, paint);
+                //placing in the center
+                int offset = (screenWidth - 7 * elements[0].getWidth()) / 2;
                 for (int i = 0; i < title.length;i++){
-                    canvas.drawBitmap(elements[title[i]],(offset+i)*blockSize,screenHeight/2-blockSize/2,paint);
+                    canvas.drawBitmap(elements[title[i]],offset+i*(int)(blockSize*titleScale)/100,screenHeight/2-(int)(blockSize*titleScale)/100/2,paint);
                 }
 
                 ourHolder.unlockCanvasAndPost(canvas);
@@ -173,6 +176,30 @@ public class MainActivity extends Activity {
                 testY = randInt.nextInt(numBlocksWidth);
                 canvas.drawBitmap(elements[randInt.nextInt(elements.length-1)], testX * blockSize, testY * blockSize, paint);
             }
+        }
+
+        private void elementsTestDraw(){
+            for(int i = 0;i < numBlocksWidth;i++)
+                for(int j =0; j < numBlocksHeight + 1;j++){
+                    if ((i+j) % 3 == 0) {
+                        canvas.drawBitmap(elements[34], i * blockSize, j * blockSize, paint);
+                    }else if ((i+j) % 3 == 1){
+                        canvas.drawBitmap(elements[17], i * blockSize, j * blockSize, paint);
+                    }else{
+                        canvas.drawBitmap(elements[19], i * blockSize, j * blockSize, paint);
+                    }
+                }
+        }
+
+        private void elementsTestGrid(){
+            paint.setAlpha(100);
+            Random randInt = new Random();
+            for(int i = 0;i < 22;i++)
+                for(int j =0; j < 13;j++){
+                    int elem = randInt.nextInt(12)+7;
+                    canvas.drawBitmap(elements[elem], i * blockSize / 2, j * blockSize / 2, paint);
+                }
+            paint.setAlpha(255);
         }
 
         private void controlFPS() {
