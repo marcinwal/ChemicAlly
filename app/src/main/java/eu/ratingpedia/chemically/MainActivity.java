@@ -18,8 +18,6 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import java.text.DecimalFormat;
-import java.util.Arrays;
 import java.util.Random;
 
 
@@ -45,6 +43,7 @@ public class MainActivity extends Activity {
     int numBlocksHeight;
     int [] title;
     int titleScale = 150; //100 normal
+    int [] selectedElements = new int[]{0,2,6,20,39,53,1,7,8,11,12,15,16,17,19,20};
 
 
 
@@ -58,9 +57,13 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         configDisplay();
-        loadElements();
-        scaleElements();
-        title = new int[]{6,2,0,20,53,53,39};
+        //loadElements();
+        //scaleElements();
+
+        //title = new int[]{6,2,0,20,53,53,39}; old for big machines
+        loadSelectedAndScale();
+
+        title = new int[]{2,1,0,3,5,5,4};
         mediaPlayer = MediaPlayer.create(this,R.raw.music1);
         mediaPlayer.setLooping(true);
         mediaPlayer.start();
@@ -80,13 +83,13 @@ public class MainActivity extends Activity {
         Point size = new Point();
         display.getSize(size);
 
-        numberOfElements = 60;
+        numberOfElements = 18;//60
         elements = new Bitmap[numberOfElements];
 
         screenWidth = size.x;
         screenHeight = size.y;
-        Log.i("sizex",""+screenWidth);
-        Log.i("sizey",""+screenHeight);
+        Log.i("sizex", "" + screenWidth);
+        Log.i("sizey", "" + screenHeight);
 
         numBlocksWidth = 11;
         blockSize = screenWidth / numBlocksWidth;
@@ -99,14 +102,32 @@ public class MainActivity extends Activity {
             String name;
             name = "elem"+Integer.toString(i);
             int id = getResources().getIdentifier(name, "drawable",getPackageName());
-           elements[i] = BitmapFactory.decodeResource(getResources(), id);
+            elements[i] = BitmapFactory.decodeResource(getResources(), id);
+            Log.i("elemLoaded",name);
        }
+    }
+
+    private void loadSelectedAndScale(){
+        for(int i=0; i < selectedElements.length;i++){
+            String name;
+            name = "elem" + Integer.toString(selectedElements[i]);
+            int id = getResources().getIdentifier(name, "drawable",getPackageName());
+            elements[i] = BitmapFactory.decodeResource(getResources(), id);
+            Log.i("elemLoaded",name);
+            if (i < 6){
+                elements[i] = Bitmap.createScaledBitmap(elements[i],(blockSize*titleScale)/100, (blockSize*titleScale)/100, false);
+            }else{
+                elements[i] = Bitmap.createScaledBitmap(elements[i], blockSize/2, blockSize/2, false);
+            }
+
+        }
+
     }
 
     private void scaleElements(){
         for(int i = 0;i < elements.length;i++){
             if (i == 0 || i == 2 || i == 6 || i == 20 || i == 39 || i == 53) { //to Change but not looping
-                elements[i] = Bitmap.createScaledBitmap(elements[i],(int)(blockSize*titleScale)/100, (int)(blockSize*titleScale)/100, false);
+                elements[i] = Bitmap.createScaledBitmap(elements[i],(blockSize*titleScale)/100, (blockSize*titleScale)/100, false);
             }else{
                 elements[i] = Bitmap.createScaledBitmap(elements[i], blockSize/2, blockSize/2, false);
             }
@@ -129,7 +150,6 @@ public class MainActivity extends Activity {
             paint = new Paint();
             frameWidth = elements[0].getWidth();
             frameHeight = elements[0].getHeight();
-
         }
 
         @Override
@@ -153,14 +173,17 @@ public class MainActivity extends Activity {
                 canvas.drawColor(Color.DKGRAY);
                 //elementsBackgroud();
                 //elementsTestDraw();
-                elementsTestGrid();
+                //drawing the background
+                //elementsTestGrid(12,7);
+                elementsTestGrid(selectedElements.length-6,6);
+
                 paint.setColor(Color.argb(255, 184, 138, 0));
                 paint.setTextSize(150);
                 //canvas.drawText("ChemicAlly", 50, 150, paint);
                 //placing in the center
                 int offset = (screenWidth - 7 * elements[0].getWidth()) / 2;
                 for (int i = 0; i < title.length;i++){
-                    canvas.drawBitmap(elements[title[i]],offset+i*(int)(blockSize*titleScale)/100,screenHeight/2-(int)(blockSize*titleScale)/100/2,paint);
+                    canvas.drawBitmap(elements[title[i]],offset+i*(blockSize*titleScale)/100,screenHeight/2-(blockSize*titleScale)/100/2,paint);
                 }
 
                 ourHolder.unlockCanvasAndPost(canvas);
@@ -191,12 +214,12 @@ public class MainActivity extends Activity {
                 }
         }
 
-        private void elementsTestGrid(){
+        private void elementsTestGrid(int howMany,int offset){
             paint.setAlpha(100);
             Random randInt = new Random();
             for(int i = 0;i < 22;i++)
-                for(int j =0; j < 13;j++){
-                    int elem = randInt.nextInt(12)+7;
+                for(int j =0; j < 14;j++){
+                    int elem = randInt.nextInt(howMany)+offset;
                     canvas.drawBitmap(elements[elem], i * blockSize / 2, j * blockSize / 2, paint);
                 }
             paint.setAlpha(255);
@@ -212,7 +235,7 @@ public class MainActivity extends Activity {
                 try{
                     ourThread.sleep(timeToSleep);
                 }catch (InterruptedException e){
-
+                    Log.e("error",e.getMessage());
                 }
             }
             lastFrameTime = System.currentTimeMillis();
@@ -224,7 +247,7 @@ public class MainActivity extends Activity {
                 mediaPlayer.release();
                 ourThread.join();
             }catch (InterruptedException e){
-
+                Log.e("error",e.getMessage());
             }
         }
 
