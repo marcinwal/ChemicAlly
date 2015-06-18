@@ -19,6 +19,8 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import java.text.DecimalFormat;
+import java.util.Arrays;
+import java.util.Random;
 
 
 public class MainActivity extends Activity {
@@ -59,6 +61,7 @@ public class MainActivity extends Activity {
         scaleElements();
         title = new int[]{6,2,0,20,53,53,39};
         mediaPlayer = MediaPlayer.create(this,R.raw.music1);
+        mediaPlayer.setLooping(true);
         mediaPlayer.start();
 
 
@@ -101,11 +104,12 @@ public class MainActivity extends Activity {
 
     private void scaleElements(){
         for(int i = 0;i < elements.length;i++){
-            //try {
+            if (i == 0 || i == 2 || i == 6 || i == 20 || i == 39 || i == 53) {
                 elements[i] = Bitmap.createScaledBitmap(elements[i], blockSize, blockSize, false);
-            //}catch(Exception e) {
-            //    Log.e("", "error: " + e.toString());
-            //}
+            }else{
+                elements[i] = Bitmap.createScaledBitmap(elements[i], blockSize/2, blockSize/2, false);
+                Log.i("scaleSmaller:",""+i);
+            }
         }
     }
 
@@ -147,6 +151,7 @@ public class MainActivity extends Activity {
                 canvas = ourHolder.lockCanvas();
 
                 canvas.drawColor(Color.DKGRAY);
+                elementsBackgroud();
                 paint.setColor(Color.argb(255, 184, 138, 0));
                 paint.setTextSize(150);
                 canvas.drawText("ChemicAlly", 50, 150, paint);
@@ -158,6 +163,16 @@ public class MainActivity extends Activity {
                 ourHolder.unlockCanvasAndPost(canvas);
             }
             
+        }
+
+        private void elementsBackgroud() {
+            Random randInt = new Random();
+            int testX,testY;
+            for(int i = 0; i < 9;i++ ) {
+                testX = randInt.nextInt(numBlocksWidth);
+                testY = randInt.nextInt(numBlocksWidth);
+                canvas.drawBitmap(elements[randInt.nextInt(elements.length-1)], testX * blockSize, testY * blockSize, paint);
+            }
         }
 
         private void controlFPS() {
