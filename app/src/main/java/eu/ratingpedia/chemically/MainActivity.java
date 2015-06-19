@@ -29,7 +29,7 @@ public class MainActivity extends Activity {
     ElementsAnimate elementsAnimate;
 
     Canvas canvas;
-    Bitmap [] elements;
+    public static Bitmap [] elements;
     int frameHeight;
     int frameWidth;
 
@@ -43,7 +43,7 @@ public class MainActivity extends Activity {
     int numBlocksHeight;
     int [] title;
     int titleScale = 150; //100 normal
-    int [] selectedElements = new int[]{0,2,6,20,39,53,1,7,8,11,12,15,16,17,19,20};
+    public static int [] selectedElements = new int[]{0,2,6,20,39,53,1,7,8,11,12,15,16,17,19,20};
 
 
 
@@ -97,7 +97,7 @@ public class MainActivity extends Activity {
 
     }
 
-    private void loadElements() {
+    public void loadElements() {
        for(int i=0; i < elements.length;i++){
             String name;
             name = "elem"+Integer.toString(i);
@@ -107,7 +107,7 @@ public class MainActivity extends Activity {
        }
     }
 
-    private void loadSelectedAndScale(){
+    public void loadSelectedAndScale(){
         for(int i=0; i < selectedElements.length;i++){
             String name;
             name = "elem" + Integer.toString(selectedElements[i]);
@@ -263,7 +263,7 @@ public class MainActivity extends Activity {
             try {
                 startActivity(myIntent);
                 mediaPlayer.release();
-                elements = null; //i am not sure if it solves the problem of memory usage
+                //elements = null; //i am not sure if it solves the problem of memory usage
             }catch(Exception e){
                 Log.e("","error:"+e.toString());
             }
