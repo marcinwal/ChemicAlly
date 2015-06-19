@@ -263,6 +263,7 @@ public class MainActivity extends Activity {
             try {
                 startActivity(myIntent);
                 mediaPlayer.release();
+                elements = null; //i am not sure if it solves the problem of memory usage
             }catch(Exception e){
                 Log.e("","error:"+e.toString());
             }
