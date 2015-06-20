@@ -33,8 +33,8 @@ public class MainActivity extends Activity {
     int frameHeight;
     int frameWidth;
 
-    int screenWidth;
-    int screenHeight;
+    public static int screenWidth;
+    public static int screenHeight;
 
     long lastFrameTime;
     int fps;
