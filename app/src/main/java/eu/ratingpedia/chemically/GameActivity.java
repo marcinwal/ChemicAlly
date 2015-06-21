@@ -1,11 +1,14 @@
 package eu.ratingpedia.chemically;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Paint;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 
 
 public class GameActivity extends Activity {
@@ -29,8 +32,13 @@ public class GameActivity extends Activity {
     int numBlocksWideBoard;
     int numBlocksHighBoard;
 
+    int score;
+    int hiScore;
+
     int fps;
     Intent i;
+
+    GameView gameView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +50,15 @@ public class GameActivity extends Activity {
 
         i = new Intent(this,MainActivity.class);
 
-        setContentView(R.layout.activity_game);
+        configureDisplay();
+
+        gameView = new GameView(this);
+
+        setContentView(gameView);
+    }
+
+    private void configureDisplay() {
+
     }
 
     public class Atom {
@@ -53,7 +69,7 @@ public class GameActivity extends Activity {
             this.atomIdx = atomIdx;
             this.posX = posX;
             this.posY = posY;
-            this.direction = 0; // not moving
+            this.direction = 0; // not moving 1,2,3,4
         }
 
         public void changeXY(int deltaX,int deltaY){
@@ -80,11 +96,33 @@ public class GameActivity extends Activity {
 
         //compares to molecules if they are equal, atoms must be placed in the same relative setup
         public boolean sameMolecule(Molecule molecule){
-            return true;
+            boolean same = true;
+            for(int i = 0; i < molecule.atoms.length;i++){
+
+            }
+
         }
 
     }
 
 
+    private class GameView extends SurfaceView implements Runnable {
 
+        Thread ourThread;
+        SurfaceHolder ourHolder;
+        volatile boolean movingMolecules;
+        Paint paint;
+
+
+        public GameView(Context context) {
+            super(context);
+            ourHolder = getHolder();
+            paint = new Paint();
+        }
+
+        @Override
+        public void run() {
+
+        }
+    }
 }
