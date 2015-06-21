@@ -5,10 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.view.Display;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+
+import java.util.Random;
 
 
 public class GameActivity extends Activity {
@@ -16,10 +20,12 @@ public class GameActivity extends Activity {
     MediaPlayer mediaPlayer;
     Bitmap [] elements = MainActivity.elements; //to avoid loading again
     int [] selectedElements = MainActivity.selectedElements;
+    int [][] gameGrid;
+
     int maxNumberAtomsInMolecule = 10;
 
-    Molecule playersMolecule;
-    Molecule targetMolecule;
+    Molecule playersMolecule; //players molecule scattered all over
+    Molecule targetMolecule;  //target molecules
 
     int screenWidth = MainActivity.screenWidth;
     int screenHeight = MainActivity.screenHeight;
@@ -58,6 +64,26 @@ public class GameActivity extends Activity {
     }
 
     private void configureDisplay() {
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        screenWidth = size.x;
+        screenHeight = size.y;
+
+        topGap = 0;//TODO for the time being
+        rightGap =0;//TODO for the time being the whole screen
+
+        numBlocksWide = 25;
+        blockSize = screenWidth / numBlocksWide;
+        numBlocksHigh = ((screenHeight - topGap))/blockSize;
+        numBlocksWideBoard = numBlocksWide;//TODO minus right gap
+        numBlocksHighBoard = numBlocksHigh;
+        gameGrid = new int[numBlocksWideBoard][numBlocksHighBoard];
+
+        //scaling bitmaps for the screen
+        for(int i = 0;i < elements.length;i++){
+            elements[i] = Bitmap.createScaledBitmap(elements[i],blockSize,blockSize,false);
+        }
 
     }
 
@@ -94,13 +120,22 @@ public class GameActivity extends Activity {
             }
         }
 
+        public void moveMoleculeAtom(int atomIdx,int deltaX,int deltaY){
+            atoms[atomIdx].changeXY(deltaX,deltaY);
+        }
+
         //compares to molecules if they are equal, atoms must be placed in the same relative setup
         public boolean sameMolecule(Molecule molecule){
             boolean same = false;
-
+            //first simple check just 1st atom in the molecule must
+            //have the same type and exact location
+            if(this.atoms[0].posX == molecule.atoms[0].posX &&
+                    this.atoms[0].posY == molecule.atoms[0].posY &&
+                    this.atoms[0].atomIdx == molecule.atoms[0].atomIdx){
+                same = true;
+            }
             return same;
         }
-
     }
 
 
@@ -109,6 +144,7 @@ public class GameActivity extends Activity {
         Thread ourThread;
         SurfaceHolder ourHolder;
         volatile boolean movingMolecules;
+        volatile boolean playingMolecules;
         Paint paint;
 
 
@@ -118,19 +154,48 @@ public class GameActivity extends Activity {
             paint = new Paint();
 
             getBoard();
-            getMolecules();
+            getMoleculesPlayer();
+            getMoleculesTarget();
         }
 
-        private void getMolecules() {
-
+        private void getMoleculesTarget() {
+            //TODO load it from the file
+            Atom atom = new Atom(0,0,0);
+            targetMolecule.addAtomToMolecule(atom);
         }
 
+        private void getMoleculesPlayer() {
+            Atom atom = new Atom(0,0,0);
+            playersMolecule.addAtomToMolecule(atom);
+            Random intRandom = new Random();
+            int x = intRandom.nextInt(5);
+            int y = intRandom.nextInt(5);
+            playersMolecule.moveMoleculeAtom(0, x, y);
+        }
+
+        //loading the board and setting the grid
         private void getBoard() {
 
         }
 
         @Override
         public void run() {
+            while(playingMolecules){
+                updateGame();
+                drawGame();
+                controlFPS();
+            }
+        }
+
+        private void updateGame() {
+
+        }
+
+        private void drawGame() {
+
+        }
+
+        private void controlFPS() {
 
         }
     }
