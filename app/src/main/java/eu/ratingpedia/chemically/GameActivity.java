@@ -96,11 +96,9 @@ public class GameActivity extends Activity {
 
         //compares to molecules if they are equal, atoms must be placed in the same relative setup
         public boolean sameMolecule(Molecule molecule){
-            boolean same = true;
-            for(int i = 0; i < molecule.atoms.length;i++){
+            boolean same = false;
 
-            }
-
+            return same;
         }
 
     }
@@ -118,6 +116,17 @@ public class GameActivity extends Activity {
             super(context);
             ourHolder = getHolder();
             paint = new Paint();
+
+            getBoard();
+            getMolecules();
+        }
+
+        private void getMolecules() {
+
+        }
+
+        private void getBoard() {
+
         }
 
         @Override
