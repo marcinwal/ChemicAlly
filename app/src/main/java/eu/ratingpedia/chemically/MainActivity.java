@@ -83,7 +83,7 @@ public class MainActivity extends Activity {
         Point size = new Point();
         display.getSize(size);
 
-        numberOfElements = 18;//60
+        numberOfElements = 16;//60
         elements = new Bitmap[numberOfElements];
 
         screenWidth = size.x;
@@ -121,6 +121,8 @@ public class MainActivity extends Activity {
             }
 
         }
+        Log.i("numberOfLoadedElements",""+elements.length);
+        Log.i("numberOfSelectedElements",""+selectedElements.length);
 
     }
 
