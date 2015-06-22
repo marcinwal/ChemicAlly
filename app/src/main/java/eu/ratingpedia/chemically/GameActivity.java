@@ -117,10 +117,10 @@ public class GameActivity extends Activity {
                 int atom = gameGrid[position[0]][position[1]];
                 Log.i("atom","atom on"+position[0]+"x"+position[1]+"atom:"+atom);
                 if (atom != -1){
+                    Log.i("action","Moving an atom");
                     playersMolecule.atoms[atom].direction = direction;
                     playersMolecule.isMoving = true;
                 }
-
                 return true;
             }
             return false;
@@ -149,7 +149,7 @@ public class GameActivity extends Activity {
         numBlocksWide = 20;
         blockSize = screenWidth / numBlocksWide;
         numBlocksHigh = ((screenHeight - topGap))/blockSize;
-        numBlocksWideBoard = numBlocksWide;//TODO minus right gap
+        numBlocksWideBoard = numBlocksWide - 4;//TODO minus right gap
         numBlocksHighBoard = numBlocksHigh;
         gameGrid = new int[numBlocksWideBoard][numBlocksHighBoard];
 
@@ -201,7 +201,30 @@ public class GameActivity extends Activity {
         }
 
         public void moveMoleculeAtom(int atomIdx,int deltaX,int deltaY){
-            atoms[atomIdx].changeXY(deltaX,deltaY);
+            int posX = atoms[atomIdx].posX;
+            int posY = atoms[atomIdx].posY;
+
+            Log.i("posX",""+posX+"ofBlocks:"+numBlocksWideBoard);
+            Log.i("posY",""+posY+"ofBlocks:"+numBlocksHighBoard);
+            Log.i("condition1",""+(posX+deltaX < numBlocksWideBoard && deltaX > 0));
+            Log.i("condition2",""+(posY+deltaY < numBlocksHighBoard && deltaY > 0));
+            Log.i("condition3",""+(posX+deltaX >= 0 && deltaX < 0));
+            Log.i("condition4",""+(posY+deltaY >= 0 && deltaY < 0));
+
+
+            if(((posX+deltaX < numBlocksWideBoard && deltaX > 0) ||
+                    (posY+deltaY < numBlocksHighBoard && deltaY > 0) ||
+                    (posX+deltaX >= 0 && deltaX < 0) ||
+                    (posY+deltaY >= 0 && deltaY < 0)) &&
+                    gameGrid[posX+deltaX][posY+deltaY] == -1) { //no obstacles
+
+                gameGrid[posX][posY] = -1;                 //moved the element
+                atoms[atomIdx].changeXY(deltaX, deltaY);
+                gameGrid[posX+deltaX][posY+deltaY] = atomIdx; //placing on the grid
+            }else{
+                atoms[atomIdx].direction = 0;
+                this.isMoving = false;
+            }
         }
 
         //compares to molecules if they are equal, atoms must be placed in the same relative setup
@@ -252,13 +275,13 @@ public class GameActivity extends Activity {
         }
 
         private void getMoleculesPlayer() {
-            Atom atomO = new Atom(8,2,4);
+            Atom atomO = new Atom(8,0,0);
             Atom atomH1 = new Atom(6,3,7);
             Atom atomH2 = new Atom(6,8,6);
             playersMolecule.addAtomToMolecule(atomO);
             playersMolecule.addAtomToMolecule(atomH1);
             playersMolecule.addAtomToMolecule(atomH2);
-            gameGrid[2][4] = 0;
+            gameGrid[0][0] = 0;
             gameGrid[3][7] = 1;
             gameGrid[8][6] = 2;
         }
@@ -286,7 +309,6 @@ public class GameActivity extends Activity {
                     playersMolecule.atoms[i].phase++;
                     if (playersMolecule.atoms[i].phase >= numberOfPhases){
                         playersMolecule.atoms[i].phase = 0; //all phases
-                        //change positions on the grid
                         switch(playersMolecule.atoms[i].direction){
                             case 1:
                                 playersMolecule.moveMoleculeAtom(i,0,-1);//going up
@@ -402,7 +424,7 @@ public class GameActivity extends Activity {
     }
 
     @Override
-    protected void onPause(){
+    protected void onPause() {
         super.onPause();
         gameView.pause();
     }
