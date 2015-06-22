@@ -44,6 +44,8 @@ public class MainActivity extends Activity {
     int [] title;
     int titleScale = 150; //100 normal
     public static int [] selectedElements = new int[]{0,2,6,20,39,53,1,7,8,11,12,15,16,17,19,20};
+    public static String [] namesElemetns = new String[]{"Mi","He","C","Ca","Y","I","H","N","0",
+                                                        "Na","Mg","P","S","Cl","K","Ca"};
 
 
 
@@ -121,9 +123,6 @@ public class MainActivity extends Activity {
             }
 
         }
-        Log.i("numberOfLoadedElements",""+elements.length);
-        Log.i("numberOfSelectedElements",""+selectedElements.length);
-
     }
 
     private void scaleElements(){
@@ -181,8 +180,6 @@ public class MainActivity extends Activity {
 
                 paint.setColor(Color.argb(255, 184, 138, 0));
                 paint.setTextSize(150);
-                //canvas.drawText("ChemicAlly", 50, 150, paint);
-                //placing in the center
                 int offset = (screenWidth - 7 * elements[0].getWidth()) / 2;
                 for (int i = 0; i < title.length;i++){
                     canvas.drawBitmap(elements[title[i]],offset+i*(blockSize*titleScale)/100,screenHeight/2-(blockSize*titleScale)/100/2,paint);
@@ -297,11 +294,13 @@ public class MainActivity extends Activity {
     }
 
     public boolean onKeyDown(int keyCode,KeyEvent event){
-        if(keyCode == KeyEvent.KEYCODE_BACK){
+        /*if(keyCode == KeyEvent.KEYCODE_BACK){
             elementsAnimate.pause();
             finish();
             return true;
         }
-        return false;
+        return false;*/
+        finish();
+        return true;
     }
 }

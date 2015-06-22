@@ -17,10 +17,8 @@ import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
-import android.view.ScaleGestureDetector;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
 
 import java.util.Random;
 
@@ -95,23 +93,47 @@ public class GameActivity extends Activity {
     }
 
     private class GestureListener extends GestureDetector.SimpleOnGestureListener{
+
+        private int[] findXY(float posX,float posY){
+            int x = (int) (posX - leftGap)/blockSize;
+            int y = (int) (posY - topGap)/blockSize;
+            return new int[]{x,y};
+        }
+
         @Override
         public boolean onFling(MotionEvent e1,MotionEvent e2,float velocityX,float velocityY){
-            Log.i("infoVelocityX",""+velocityX);
-            Log.i("infoVelocityY",""+velocityY);
-            Log.i("infoPosX",""+e1.getX());
-            Log.i("infoPosY",""+e1.getY());
-            return true;
+            if(!playersMolecule.isMoving) {
+                int[] position = new int[2];
+                int[] position2 = new int[2];
+                int direction;
+
+                position = findXY(e1.getX(), e1.getY());
+                position2 = findXY(e2.getX(), e2.getY());
+
+                direction = (Math.abs(position[0]-position2[0])>Math.abs(position[1]-position2[1]))?
+                            (position[0] > position2[0]? 4: 2 ) :
+                            (position[1] > position2[1]? 1: 3 );
+                // TODO if initial position is ok with element
+                int atom = gameGrid[position[0]][position[1]];
+                Log.i("atom","atom on"+position[0]+"x"+position[1]+"atom:"+atom);
+                if (atom != -1){
+                    playersMolecule.atoms[atom].direction = direction;
+                    playersMolecule.isMoving = true;
+                }
+
+                return true;
+            }
+            return false;
         }
     }
+
 
     private void setBoard(){
         for(int i = 0; i < numBlocksWideBoard;i++)
             for(int j = 0;j < numBlocksHighBoard;j++)
             {
-                gameGrid[i][j] = 0;//TODO fill it with WALLS etc.
+                gameGrid[i][j] = -1;//TODO fill it with WALLS etc.
             }
-        Log.i("endMethod","setBoard");
     }
 
     private void configureDisplay() {
@@ -121,10 +143,10 @@ public class GameActivity extends Activity {
         screenWidth = size.x;
         screenHeight = size.y;
 
-        topGap = 0;//TODO for the time being
-        rightGap =0;//TODO for the time being the whole screen
+        topGap = 0;// TODO for the time being
+        rightGap = 0;// TODO for the time being the whole screen
 
-        numBlocksWide = 25;
+        numBlocksWide = 20;
         blockSize = screenWidth / numBlocksWide;
         numBlocksHigh = ((screenHeight - topGap))/blockSize;
         numBlocksWideBoard = numBlocksWide;//TODO minus right gap
@@ -140,8 +162,6 @@ public class GameActivity extends Activity {
             elements[i] = Bitmap.createScaledBitmap(elements[i],
                           blockSize - targetLineIndicator,blockSize-targetLineIndicator,false);
         }
-        Log.i("endMethod","configureDisplay");
-
     }
 
     public class Atom {
@@ -165,12 +185,12 @@ public class GameActivity extends Activity {
     public class Molecule {
         Atom [] atoms;
         int numberOfAtoms;
+        boolean isMoving;
 
         public Molecule(){
-            Log.i("myConstructorStart","molecule");
             atoms = new Atom[maxNumberAtomsInMolecule];
             numberOfAtoms = 0;
-            Log.i("myConstructorEnd","molecule");
+            isMoving = false;
         }
 
         //adding atom to the molecule
@@ -204,8 +224,6 @@ public class GameActivity extends Activity {
         Thread ourThread;
         SurfaceHolder ourHolder;
 
-
-        volatile boolean movingMolecules;
         volatile boolean playingMolecules;
         Paint paint;
 
@@ -221,25 +239,28 @@ public class GameActivity extends Activity {
             getBoard();
             getMoleculesPlayer();
             getMoleculesTarget();
-            Log.i("endMethod", "GameViewConstructor");
         }
 
         private void getMoleculesTarget() {
             //TODO load it from the file
-            Atom atom = new Atom(1,10,10);
-            targetMolecule.addAtomToMolecule(atom);
+            Atom atomO = new Atom(8,8,7);
+            Atom atomH1 = new Atom(6,7,8);
+            Atom atomH2 = new Atom(6,9,8);
+            targetMolecule.addAtomToMolecule(atomO);
+            targetMolecule.addAtomToMolecule(atomH1);
+            targetMolecule.addAtomToMolecule(atomH2);
         }
 
         private void getMoleculesPlayer() {
-            Atom atom = new Atom(1,0,0);
-            Log.i("getMoleculesPlayer","atom added");
-            playersMolecule.addAtomToMolecule(atom);
-            Log.i("getMoleculesPlayerInfo", "atom added to the molecule");
-            Random intRandom = new Random();
-            int x = intRandom.nextInt(5);
-            int y = intRandom.nextInt(5);
-            playersMolecule.moveMoleculeAtom(0, x, y);
-            Log.i("endMethod", "getMoleculesPlayer");
+            Atom atomO = new Atom(8,2,4);
+            Atom atomH1 = new Atom(6,3,7);
+            Atom atomH2 = new Atom(6,8,6);
+            playersMolecule.addAtomToMolecule(atomO);
+            playersMolecule.addAtomToMolecule(atomH1);
+            playersMolecule.addAtomToMolecule(atomH2);
+            gameGrid[2][4] = 0;
+            gameGrid[3][7] = 1;
+            gameGrid[8][6] = 2;
         }
 
         //loading the board and setting the grid
@@ -296,7 +317,6 @@ public class GameActivity extends Activity {
         }
 
         private void drawTarget(){
-
             for(int i = 0 ; i < targetMolecule.numberOfAtoms;i++){
 
                 paint.setColor(Color.argb(255, 255, 255, 255));
@@ -326,10 +346,8 @@ public class GameActivity extends Activity {
                             leftGap + playersMolecule.atoms[i].posX * blockSize+targetLineIndicator,
                             topGap + playersMolecule.atoms[i].posY * blockSize+targetLineIndicator,paint);
                 }
-
                 ourHolder.unlockCanvasAndPost(canvas);
             }
-
         }
 
         private void controlFPS() {
@@ -364,22 +382,6 @@ public class GameActivity extends Activity {
             ourThread = new Thread(this);
             ourThread.start();
         }
-
-        /*
-        @Override
-        public boolean onTouchEvent(MotionEvent motionEvent){
-
-            switch (motionEvent.getAction() &
-                    MotionEvent.ACTION_MASK){
-                case MotionEvent.ACTION_UP:
-                    if(motionEvent.getX() >= screenWidth / 2 ){
-                        Log.i("info","RIGHT");
-                    }
-
-            }
-            return true;
-        }*/
-
     }
 
     @Override
