@@ -56,6 +56,7 @@ public class GameActivity extends Activity {
 
     int score;
     int hiScore;
+    int level;
 
     int fps;
     Intent i;
@@ -148,6 +149,17 @@ public class GameActivity extends Activity {
         gameGrid[8][8] = -2;
         gameGrid[8][9] = -2;
         gameGrid[8][10] = -2;
+        gameGrid[10][1] = -2;
+        gameGrid[10][2] = -2;
+        gameGrid[12][5] = -2;
+        gameGrid[12][6] = -2;
+
+        //filling INFO panel
+        for(int i = numBlocksWideBoard;i < numBlocksWide;i++)
+            for(int j = 1; j < numBlocksHighBoard-1;j++){
+                gameGrid[i][j] = -2;
+            }
+
     }
 
     private void configureDisplay() {
@@ -169,7 +181,7 @@ public class GameActivity extends Activity {
         gameGrid = new int[numBlocksWide][numBlocksHigh]; // CHANGE WAS HighBoard
 
         targetLineIndicator = 2; //where to place the molecule
-        numberOfPhases = 3;
+        numberOfPhases = 8;
 
 
         //scaling bitmaps for the screen
@@ -194,6 +206,11 @@ public class GameActivity extends Activity {
         public void changeXY(int deltaX,int deltaY){
             this.posX += deltaX;
             this.posY += deltaY;
+        }
+
+        public void atomStop() {
+            this.direction = 0;
+            this.phase = 0;
         }
     }
 
@@ -235,6 +252,11 @@ public class GameActivity extends Activity {
                 atoms[atomIdx].direction = 0;
                 this.isMoving = false;
             }
+        }
+
+        public void stopAtom(int number){
+            this.atoms[number].atomStop();
+            this.isMoving = false;
         }
 
         //compares to molecules if they are equal, atoms must be placed in the same relative setup
@@ -287,7 +309,7 @@ public class GameActivity extends Activity {
             Atom atomH2 = new Atom(6,8,6);
             playersMolecule.addAtomToMolecule(atomO,true);
             playersMolecule.addAtomToMolecule(atomH1,true);
-            playersMolecule.addAtomToMolecule(atomH2,true);
+            playersMolecule.addAtomToMolecule(atomH2, true);
         }
 
         //loading the board and setting the grid
@@ -304,10 +326,9 @@ public class GameActivity extends Activity {
             }
         }
 
-        //TODO check if a molecule can move further;
+
         private void updateGame() {
 
-            //need to check if move to the next is allowed
             for(int i = 0;i < playersMolecule.numberOfAtoms;i++){
                 if (playersMolecule.atoms[i].direction != 0){
                     playersMolecule.atoms[i].phase++;
@@ -315,16 +336,16 @@ public class GameActivity extends Activity {
                         playersMolecule.atoms[i].phase = 0; //all phases
                         switch(playersMolecule.atoms[i].direction){
                             case 1:
-                                playersMolecule.moveMoleculeAtom(i,0,-1);//going up
+                                playersMolecule.moveMoleculeAtom(i, 0, -1);//going up
                                 break;
                             case 2:
-                                playersMolecule.moveMoleculeAtom(i,1,0);//going right
+                                playersMolecule.moveMoleculeAtom(i, 1, 0);//going right
                                 break;
                             case 3:
-                                playersMolecule.moveMoleculeAtom(i,0,1);//going down
+                                playersMolecule.moveMoleculeAtom(i, 0, 1);//going down
                                 break;
                             case 4:
-                                playersMolecule.moveMoleculeAtom(i,-1,0);//going left
+                                playersMolecule.moveMoleculeAtom(i, -1, 0);//going left
                                 break;
                         }
                     }
@@ -340,8 +361,8 @@ public class GameActivity extends Activity {
         //drawing walls
         private void drawWalls(){
             paint.setColor(Color.argb(125, 0, 255, 0));
-            for(int i = 0; i < numBlocksWide;i++) { //CHANGE
-                for (int j = 0; j < numBlocksHigh; j++) { //CHANGE
+            for(int i = 0; i < numBlocksWide;i++) {
+                for (int j = 0; j < numBlocksHigh; j++) {
                     if (gameGrid[i][j] == -2) {
                         canvas.drawBitmap(elements[16],leftGap + i * blockSize,topGap + j * blockSize,paint);
                     }
@@ -349,8 +370,10 @@ public class GameActivity extends Activity {
             }
             //lower line
             for(int i = 0 ; i < numBlocksWide;i++){
-                canvas.drawBitmap(elements[16],leftGap + i * blockSize,topGap + numBlocksHigh * blockSize,paint);//chnage
+                canvas.drawBitmap(elements[16], leftGap + i * blockSize, topGap + numBlocksHigh * blockSize, paint);
             }
+
+
 
         }
 
@@ -379,12 +402,66 @@ public class GameActivity extends Activity {
                 drawTarget();
                 paint.setColor(Color.argb(255, 255, 255, 255));
                 for(int i = 0; i < playersMolecule.numberOfAtoms;i++){
-                    canvas.drawBitmap(elements[playersMolecule.atoms[i].atomIdx],
-                            leftGap + playersMolecule.atoms[i].posX * blockSize+targetLineIndicator,
-                            topGap + playersMolecule.atoms[i].posY * blockSize+targetLineIndicator,paint);
+
+                    int x = playersMolecule.atoms[i].posX;
+                    int y = playersMolecule.atoms[i].posY;
+                    int phase = playersMolecule.atoms[i].phase;
+                    Bitmap bitmap = elements[playersMolecule.atoms[i].atomIdx];
+
+
+                    switch(playersMolecule.atoms[i].direction){
+                        case 1: //moving up
+                                if(gameGrid[x][y-1] == -1) {
+                                    canvas.drawBitmap(bitmap,
+                                            leftGap + x * blockSize + targetLineIndicator,
+                                            topGap + y * blockSize -
+                                                    blockSize * phase / numberOfPhases
+                                                    + targetLineIndicator, paint);
+                                }else{
+                                    playersMolecule.stopAtom(i);
+                                }
+                                break;
+                        case 2: //moving right
+                                if (gameGrid[x+1][y] == -1) {
+                                    canvas.drawBitmap(bitmap, leftGap + x * blockSize + targetLineIndicator +
+                                            blockSize * phase / numberOfPhases, topGap + y * blockSize +
+                                            targetLineIndicator, paint);
+                                }else{
+                                    playersMolecule.stopAtom(i);
+                                }
+                                break;
+                        case 3: //moving down
+                                if(gameGrid[x][y+1] == -1) {
+                                    canvas.drawBitmap(bitmap,
+                                        leftGap + x * blockSize + targetLineIndicator,
+                                        topGap + y * blockSize +
+                                                blockSize * phase / numberOfPhases
+                                                + targetLineIndicator, paint);
+                                }else{
+                                    playersMolecule.stopAtom(i);
+                                }
+                                break;
+                        case 4:
+                                if (gameGrid[x-1][y] == -1) {
+                                    canvas.drawBitmap(bitmap,
+                                            leftGap + x * blockSize + targetLineIndicator -
+                                                    blockSize * phase / numberOfPhases,
+                                            topGap + y * blockSize
+                                                    + targetLineIndicator, paint);
+                                }else{
+                                    playersMolecule.stopAtom(i);
+                                }
+                                break;
+                    }
+
+                    if (playersMolecule.atoms[i].direction == 0) {
+                        canvas.drawBitmap(bitmap,
+                                leftGap + x * blockSize + targetLineIndicator,
+                                topGap + y * blockSize + targetLineIndicator, paint);
+                    }
                 }
-                drawText();
-                ourHolder.unlockCanvasAndPost(canvas);
+                    drawText();
+                    ourHolder.unlockCanvasAndPost(canvas);
             }
         }
 
@@ -396,9 +473,9 @@ public class GameActivity extends Activity {
 
         private void controlFPS() {
             long timeThisFrame = System.currentTimeMillis() - lastFrameTime;
-            long timeToSleep = 100 - timeThisFrame;
+            long timeToSleep = 50 - timeThisFrame; //100
             if(timeThisFrame > 0){
-                fps = (int) (1000/timeThisFrame);
+                fps = (int) (500/timeThisFrame);   //1000
             }
             if(timeToSleep > 0){
                 try{
