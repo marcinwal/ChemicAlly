@@ -3,6 +3,7 @@ package eu.ratingpedia.chemically;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.gesture.Gesture;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -12,15 +13,21 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
+import android.view.GestureDetector;
+import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 
 import java.util.Random;
 
 
 public class GameActivity extends Activity {
+
+    GestureDetector myG;
 
     MediaPlayer mediaPlayer;
     Canvas canvas;
@@ -70,6 +77,8 @@ public class GameActivity extends Activity {
         playersMolecule = new Molecule();
         targetMolecule = new Molecule();
 
+        myG = new GestureDetector(this,new GestureListener());
+
         i = new Intent(this,MainActivity.class);
 
         configureDisplay();
@@ -78,6 +87,22 @@ public class GameActivity extends Activity {
 
         setContentView(gameView);
 
+    }
+
+    public boolean onTouchEvent(MotionEvent event){
+        myG.onTouchEvent(event);
+        return true;
+    }
+
+    private class GestureListener extends GestureDetector.SimpleOnGestureListener{
+        @Override
+        public boolean onFling(MotionEvent e1,MotionEvent e2,float velocityX,float velocityY){
+            Log.i("infoVelocityX",""+velocityX);
+            Log.i("infoVelocityY",""+velocityY);
+            Log.i("infoPosX",""+e1.getX());
+            Log.i("infoPosY",""+e1.getY());
+            return true;
+        }
     }
 
     private void setBoard(){
@@ -178,10 +203,15 @@ public class GameActivity extends Activity {
 
         Thread ourThread;
         SurfaceHolder ourHolder;
+
+
         volatile boolean movingMolecules;
         volatile boolean playingMolecules;
         Paint paint;
 
+
+        //starts gesture detection
+        //end extra gesture detection
 
         public GameView(Context context) {
             super(context);
@@ -335,6 +365,7 @@ public class GameActivity extends Activity {
             ourThread.start();
         }
 
+        /*
         @Override
         public boolean onTouchEvent(MotionEvent motionEvent){
 
@@ -346,24 +377,6 @@ public class GameActivity extends Activity {
                     }
 
             }
-            return true;
-        }
-
-
-
-
-        public boolean onFling(MotionEvent event1, MotionEvent event2,
-                               float velocityX, float velocityY) {
-            Log.i("touchEvents","Fling");
-            return true;
-        }
-
-
-
-        /*@Override
-        public boolean onScroll(MotionEvent e1, MotionEvent e2,
-                                float distanceX, float distanceY) {
-            gestureText.setText("onScroll");
             return true;
         }*/
 
