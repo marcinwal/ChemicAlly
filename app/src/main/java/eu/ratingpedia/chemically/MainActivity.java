@@ -43,9 +43,9 @@ public class MainActivity extends Activity {
     int numBlocksHeight;
     int [] title;
     int titleScale = 150; //100 normal
-    public static int [] selectedElements = new int[]{0,2,6,20,39,53,1,7,8,11,12,15,16,17,19,20};
+    public static int [] selectedElements = new int[]{0,2,6,20,39,53,1,7,8,11,12,15,16,17,19,20,119};
     public static String [] namesElemetns = new String[]{"Mi","He","C","Ca","Y","I","H","N","0",
-                                                        "Na","Mg","P","S","Cl","K","Ca"};
+                                                        "Na","Mg","P","S","Cl","K","Ca","Wall"};
 
 
 
@@ -85,13 +85,12 @@ public class MainActivity extends Activity {
         Point size = new Point();
         display.getSize(size);
 
-        numberOfElements = 16;//60
+        numberOfElements = 17;//60
         elements = new Bitmap[numberOfElements];
 
         screenWidth = size.x;
         screenHeight = size.y;
-        Log.i("sizex", "" + screenWidth);
-        Log.i("sizey", "" + screenHeight);
+
 
         numBlocksWidth = 11;
         blockSize = screenWidth / numBlocksWidth;
@@ -105,7 +104,7 @@ public class MainActivity extends Activity {
             name = "elem"+Integer.toString(i);
             int id = getResources().getIdentifier(name, "drawable",getPackageName());
             elements[i] = BitmapFactory.decodeResource(getResources(), id);
-            Log.i("elemLoaded",name);
+
        }
     }
 
@@ -115,7 +114,6 @@ public class MainActivity extends Activity {
             name = "elem" + Integer.toString(selectedElements[i]);
             int id = getResources().getIdentifier(name, "drawable",getPackageName());
             elements[i] = BitmapFactory.decodeResource(getResources(), id);
-            Log.i("elemLoaded",name);
             if (i < 6){
                 elements[i] = Bitmap.createScaledBitmap(elements[i],(blockSize*titleScale)/100, (blockSize*titleScale)/100, false);
             }else{
