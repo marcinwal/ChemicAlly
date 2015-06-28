@@ -1,0 +1,14 @@
+xxxxxxxxxxxxxxxxxxxx
+x        x     xxxxx
+x        x     xxxxx
+x        x     xxxxx
+x        JN    xxxxx
+x              xxxxx
+x   jx         xxxxx
+x    x         xxxxx
+x       x      xjnxx
+x       x      xxxxx
+x      nx      xxxxx
+xxxxxxxxxxxxxxxxxxxx
+NaCl
+salt

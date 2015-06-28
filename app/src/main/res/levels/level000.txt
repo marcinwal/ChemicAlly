@@ -1,14 +1,12 @@
 xxxxxxxxxxxxxxxxxxxx
-xi       x     xxxxx
+x        x     xxxxx
 x        x     xxxxx
 x        x     xxxxx
 x              xxxxx
 x              xxxxx
-x    x  g      xxxxx
-x    x  I      xxixx
-x      GxG     xgxgx
-x   g   x      xxxxx
+x    x         xxxxx
+x    x         xxxxx
+x       x      xxxxx
+x       x      xxxxx
 x       x      xxxxx
 xxxxxxxxxxxxxxxxxxxx
-H2O
-water
