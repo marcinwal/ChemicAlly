@@ -126,6 +126,14 @@ public class GameActivity extends Activity {
         }
     }
 
+
+    private void loadLevel(int level){
+        String levelS = "level"+i+".txt";
+        int id = getResources().getIdentifier(levelS, "levels",getPackageName());
+
+
+    }
+
     //will be loadingLevels
     private void setBoard(){
         for(int i = 0; i < numBlocksWide;i++) {
