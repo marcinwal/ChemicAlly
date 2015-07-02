@@ -133,9 +133,11 @@ public class GameActivity extends Activity {
 
 
     private String loadLevel(int level){
-        String levelS = "level"+i+".txt";
 
-        InputStream inputStream = getResources().openRawResource(R.raw.level1);
+        String levelS = "level"+i;
+
+        InputStream inputStream = getResources().openRawResource(getResources().getIdentifier(levelS, "raw",getPackageName()));
+
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         int i;
         try{
