@@ -158,47 +158,52 @@ public class GameActivity extends Activity {
 
     }
 
-    //will be loadingLevels
     private void setBoard(){
 
         String loadedBoard;
-
         loadedBoard = loadLevel(1);
-
         Log.i("level",loadedBoard);
+        useLoadedLevel(loadedBoard,gameGrid);
 
+    }
 
-        for(int i = 0; i < numBlocksWide;i++) {
-            for (int j = 0; j < numBlocksHigh; j++) {
-                gameGrid[i][j] = -1;
+    private void useLoadedLevel(String loadedBoard, int[][] gameGrid) {
+        int numberOfFields = numBlocksWide * numBlocksHigh;
+        int atomSymbol = -1;
+        int targetSymbol;
+        for (int i = 0; i < numberOfFields;i++){
+            targetSymbol = -1;
+            int element = loadedBoard.charAt(i);
+            switch(element){
+                case 'x':
+                    atomSymbol = -2;
+                    break;
+                case ' ':
+                    atomSymbol = -1;
+                    break;
+                default:
+                    if ( element >= 97){
+                        atomSymbol = element - 97;
+                    }
+                    if (element < 90){
+                        targetSymbol = element - 65;
+                    }
             }
-        }
+            int x = i % numBlocksWide;
+            int y = i / numBlocksWide;
 
-        for(int i = 0;i < numBlocksWide;i++){  //CHANGE
-            gameGrid[i][0] = -2; //wall
-            gameGrid[i][numBlocksHighBoard-1] = -2;
-            gameGrid[i][numBlocksHigh-1] = -2;
-        }
+            gameGrid[x][y] = atomSymbol;
 
-        for(int i = 0;i < numBlocksHighBoard;i++){
-            gameGrid[0][i] = -2; //wall
-            gameGrid[numBlocksWideBoard-1][i] = -2;
-        }
-
-        //funny wall in the middle test
-        gameGrid[8][8] = -2;
-        gameGrid[8][9] = -2;
-        gameGrid[8][10] = -2;
-        gameGrid[10][1] = -2;
-        gameGrid[10][2] = -2;
-        gameGrid[12][5] = -2;
-        gameGrid[12][6] = -2;
-
-        //filling INFO panel
-        for(int i = numBlocksWideBoard;i < numBlocksWide;i++)
-            for(int j = 1; j < numBlocksHighBoard-1;j++){
-                gameGrid[i][j] = -2;
+            if (atomSymbol > 0 ){
+                Atom atom = new Atom(atomSymbol,x,y);
+                playersMolecule.addAtomToMolecule(atom,true);
             }
+            if (targetSymbol != -1){
+                Atom atom = new Atom(targetSymbol,x,y);
+                targetMolecule.addAtomToMolecule(atom,false);
+            }
+
+        }
 
     }
 
@@ -327,33 +332,6 @@ public class GameActivity extends Activity {
             super(context);
             ourHolder = getHolder();
             paint = new Paint();
-
-            getBoard();
-            getMoleculesPlayer();
-            getMoleculesTarget();
-        }
-
-        private void getMoleculesTarget() {
-            //TODO load it from the file
-            Atom atomO = new Atom(8,8,7);
-            Atom atomH1 = new Atom(6,7,8);
-            Atom atomH2 = new Atom(6,9,8);
-            targetMolecule.addAtomToMolecule(atomO, false);
-            targetMolecule.addAtomToMolecule(atomH1, false);
-            targetMolecule.addAtomToMolecule(atomH2, false);
-        }
-
-        private void getMoleculesPlayer() {
-            Atom atomO = new Atom(8,1,1);
-            Atom atomH1 = new Atom(6,3,7);
-            Atom atomH2 = new Atom(6,8,6);
-            playersMolecule.addAtomToMolecule(atomO,true);
-            playersMolecule.addAtomToMolecule(atomH1,true);
-            playersMolecule.addAtomToMolecule(atomH2, true);
-        }
-
-        //loading the board and setting the grid
-        private void getBoard() {
             setBoard();
         }
 
