@@ -134,16 +134,18 @@ public class GameActivity extends Activity {
 
     private String loadLevel(int level){
 
-        String levelS = "level"+i;
+        String levelS = "level"+Integer.toString(level);
 
-        InputStream inputStream = getResources().openRawResource(getResources().getIdentifier(levelS, "raw",getPackageName()));
+        InputStream inputStream = getResources().openRawResource(getResources().getIdentifier(levelS, "raw", getPackageName()));
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         int i;
         try{
             i = inputStream.read();
             while (i != -1){
-                byteArrayOutputStream.write(i);
+                if (i != 13 && i !=10) {
+                    byteArrayOutputStream.write(i);
+                }
                 i = inputStream.read();
             }
             inputStream.close();
@@ -152,12 +154,20 @@ public class GameActivity extends Activity {
             e.printStackTrace();
         }
 
-        return byteArrayOutputStream.toString();
+        return String.valueOf(byteArrayOutputStream);
 
     }
 
     //will be loadingLevels
     private void setBoard(){
+
+        String loadedBoard;
+
+        loadedBoard = loadLevel(1);
+
+        Log.i("level",loadedBoard);
+
+
         for(int i = 0; i < numBlocksWide;i++) {
             for (int j = 0; j < numBlocksHigh; j++) {
                 gameGrid[i][j] = -1;
