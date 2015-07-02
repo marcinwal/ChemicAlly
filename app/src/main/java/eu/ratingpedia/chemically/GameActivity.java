@@ -20,6 +20,11 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Random;
 
 
@@ -127,10 +132,25 @@ public class GameActivity extends Activity {
     }
 
 
-    private void loadLevel(int level){
+    private String loadLevel(int level){
         String levelS = "level"+i+".txt";
-        int id = getResources().getIdentifier(levelS, "levels",getPackageName());
 
+        InputStream inputStream = getResources().openRawResource(R.raw.level1);
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        int i;
+        try{
+            i = inputStream.read();
+            while (i != -1){
+                byteArrayOutputStream.write(i);
+                i = inputStream.read();
+            }
+            inputStream.close();
+
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+
+        return byteArrayOutputStream.toString();
 
     }
 
