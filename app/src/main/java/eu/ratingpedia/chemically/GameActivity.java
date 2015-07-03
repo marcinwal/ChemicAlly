@@ -64,7 +64,7 @@ public class GameActivity extends Activity {
 
     int score;
     int hiScore;
-    int level;
+    int level=1;
 
     int fps;
     Intent i;
@@ -112,7 +112,7 @@ public class GameActivity extends Activity {
         @Override
         public boolean onFling(MotionEvent e1,MotionEvent e2,float velocityX,float velocityY){
             if(!playersMolecule.isMoving) {
-                int[] position = new int[2];
+                int[] position =  new int[2];
                 int[] position2 = new int[2];
                 int direction;
 
@@ -161,10 +161,10 @@ public class GameActivity extends Activity {
 
     }
 
-    private void setBoard(){
+    private void setBoard(int level){
 
         String loadedBoard;
-        loadedBoard = loadLevel(3);
+        loadedBoard = loadLevel(level);
         Log.i("level",loadedBoard);
         useLoadedLevel(loadedBoard,gameGrid);
 
@@ -206,23 +206,23 @@ public class GameActivity extends Activity {
                 Atom atom = new Atom(targetSymbol,x,y);
                 targetMolecule.addAtomToMolecule(atom,false);
             }
-
+            playersMolecule.isMoving = false;
         }
 
         //reading the formula
         int i = numberOfFields;
         formula = "";
-        char current = (char)loadedBoard.charAt(i);
+        char current = loadedBoard.charAt(i);
         while (current != ' '){
             formula += current;
             i++;
-            current = (char)loadedBoard.charAt(i);
+            current = loadedBoard.charAt(i);
         }
         //reading the name
         i++;
         title = "";
         while(i < loadedBoard.length() ){
-            current = (char)loadedBoard.charAt(i);
+            current = loadedBoard.charAt(i);
             title += current;
             i++;
         }
@@ -298,6 +298,7 @@ public class GameActivity extends Activity {
             if(numberOfAtoms < maxNumberAtomsInMolecule ){
                 if (effectGrid){
                     gameGrid[atom.posX][atom.posY] = numberOfAtoms;
+
                 }
                 atoms[numberOfAtoms++] = atom;
             }
@@ -327,7 +328,6 @@ public class GameActivity extends Activity {
             this.isMoving = false;
         }
 
-        //compares to molecules if they are equal, atoms must be placed in the same relative setup
         public boolean sameMolecule(Molecule molecule){
 
             boolean same = true;
@@ -348,6 +348,10 @@ public class GameActivity extends Activity {
                 }
 
             }
+
+            if (same){
+                Log.i("Winner of Level:",""+level);
+            }
             return same;
         }
     }
@@ -366,7 +370,7 @@ public class GameActivity extends Activity {
             super(context);
             ourHolder = getHolder();
             paint = new Paint();
-            setBoard();
+            setBoard(level);
         }
 
         @Override
@@ -406,7 +410,39 @@ public class GameActivity extends Activity {
             }
 
             won = playersMolecule.sameMolecule(targetMolecule);
+            if (won){
+                level ++;
+                congs();
+                updateScore();
+                saveScore();
+                resetAtoms();
+                setBoard(level);
 
+            }
+
+
+        }
+
+        private void resetAtoms() {
+            for(int i = 0; i < playersMolecule.numberOfAtoms;i++){
+                playersMolecule.atoms[i] = null;
+            }
+            playersMolecule.numberOfAtoms = 0;
+            for(int i = 0; i < targetMolecule.numberOfAtoms;i++){
+                targetMolecule.atoms[i] = null;
+            }
+            targetMolecule.numberOfAtoms = 0;
+        }
+
+        private void saveScore() {
+
+        }
+
+        private void updateScore() {
+
+        }
+
+        private void congs() {
 
         }
 
