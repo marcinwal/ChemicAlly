@@ -194,7 +194,7 @@ public class MainActivity extends Activity {
             for(int i = 0; i < 9;i++ ) {
                 testX = randInt.nextInt(numBlocksWidth);
                 testY = randInt.nextInt(numBlocksWidth);
-                canvas.drawBitmap(elements[randInt.nextInt(elements.length-1)], testX * blockSize, testY * blockSize, paint);
+                canvas.drawBitmap(elements[randInt.nextInt(elements.length-2)], testX * blockSize, testY * blockSize, paint);
             }
         }
 
@@ -216,7 +216,7 @@ public class MainActivity extends Activity {
             Random randInt = new Random();
             for(int i = 0;i < 22;i++)
                 for(int j =0; j < 14;j++){
-                    int elem = randInt.nextInt(howMany)+offset;
+                    int elem = randInt.nextInt(howMany-1)+offset;
                     canvas.drawBitmap(elements[elem], i * blockSize / 2, j * blockSize / 2, paint);
                 }
             paint.setAlpha(255);

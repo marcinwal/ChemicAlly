@@ -439,7 +439,10 @@ public class GameActivity extends Activity {
         }
 
         private void updateScore() {
+            animateBoom();
+        }
 
+        private void animateBoom() {
         }
 
         private void congs() {
