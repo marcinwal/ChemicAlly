@@ -164,7 +164,7 @@ public class GameActivity extends Activity {
     private void setBoard(){
 
         String loadedBoard;
-        loadedBoard = loadLevel(1);
+        loadedBoard = loadLevel(3);
         Log.i("level",loadedBoard);
         useLoadedLevel(loadedBoard,gameGrid);
 
@@ -175,6 +175,7 @@ public class GameActivity extends Activity {
         int atomSymbol = -1;
         int targetSymbol;
         for (int i = 0; i < numberOfFields;i++){
+            atomSymbol = -1;
             targetSymbol = -1;
             int element = loadedBoard.charAt(i);
             switch(element){
@@ -185,11 +186,11 @@ public class GameActivity extends Activity {
                     atomSymbol = -1;
                     break;
                 default:
-                    if ( element >= 97){
-                        atomSymbol = element - 97;
+                    if ( element >= 'a' && element <= 'z'){
+                        atomSymbol = element - 'a';
                     }
-                    if (element < 90){
-                        targetSymbol = element - 65;
+                    if (element >= 'A' && element <= 'Z'){
+                        targetSymbol = element - 'A';
                     }
             }
             int x = i % numBlocksWide;
@@ -328,13 +329,24 @@ public class GameActivity extends Activity {
 
         //compares to molecules if they are equal, atoms must be placed in the same relative setup
         public boolean sameMolecule(Molecule molecule){
-            boolean same = false;
-            //first simple check just 1st atom in the molecule must
-            //have the same type and exact location
-            if(this.atoms[0].posX == molecule.atoms[0].posX &&
-                    this.atoms[0].posY == molecule.atoms[0].posY &&
-                    this.atoms[0].atomIdx == molecule.atoms[0].atomIdx){
-                same = true;
+
+            boolean same = true;
+
+            for(int i = 0; i < molecule.numberOfAtoms;i++){
+                int xTarget = molecule.atoms[i].posX;
+                int yTarget = molecule.atoms[i].posY;
+                int elemTarget = molecule.atoms[i].atomIdx;
+                int atomIn = gameGrid[xTarget][yTarget];
+                if (gameGrid[xTarget][yTarget] != -1){
+                    if(this.atoms[atomIn].atomIdx != elemTarget){
+                        same = false;
+                        break;
+                    }
+                }else{
+                    same = false;
+                    break;
+                }
+
             }
             return same;
         }
@@ -513,9 +525,9 @@ public class GameActivity extends Activity {
 
         private void controlFPS() {
             long timeThisFrame = System.currentTimeMillis() - lastFrameTime;
-            long timeToSleep = 50 - timeThisFrame; //100
+            long timeToSleep = 25 - timeThisFrame; //100
             if(timeThisFrame > 0){
-                fps = (int) (500/timeThisFrame);   //1000
+                fps = (int) (250/timeThisFrame);   //1000
             }
             if(timeToSleep > 0){
                 try{
