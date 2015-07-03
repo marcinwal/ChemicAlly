@@ -10,5 +10,4 @@ x       x      xjnxx
 x       x      xxxxx
 x      nx      xxxxx
 xxxxxxxxxxxxxxxxxxxx
-NaCl
-salt
+NaCl salt

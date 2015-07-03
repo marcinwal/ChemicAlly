@@ -59,6 +59,9 @@ public class GameActivity extends Activity {
     int targetLineIndicator;
     int numberOfPhases;
 
+    String title;
+    String formula;
+
     int score;
     int hiScore;
     int level;
@@ -205,6 +208,25 @@ public class GameActivity extends Activity {
 
         }
 
+        //reading the formula
+        int i = numberOfFields;
+        formula = "";
+        char current = (char)loadedBoard.charAt(i);
+        while (current != ' '){
+            formula += current;
+            i++;
+            current = (char)loadedBoard.charAt(i);
+        }
+        //reading the name
+        i++;
+        title = "";
+        while(i < loadedBoard.length() ){
+            current = (char)loadedBoard.charAt(i);
+            title += current;
+            i++;
+        }
+        Log.i("Title",title);
+        Log.i("Formula",formula);
     }
 
     private void configureDisplay() {

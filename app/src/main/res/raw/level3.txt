@@ -10,5 +10,4 @@ x      GxG     xgxgx
 x   g   x      xxxxx
 x       x      xxxxx
 xxxxxxxxxxxxxxxxxxxx
-H2O
-water
+H2O water

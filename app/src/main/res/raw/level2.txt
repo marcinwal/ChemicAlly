@@ -7,8 +7,7 @@ x              xxxxx
 x    x         xxxxx
 x    x iMm     xxmxx
 x i    IxI     xixix
-x       x      xxxxx
+x      xx      xxxxx
 x       x      xxxxx
 xxxxxxxxxxxxxxxxxxxx
-SO2
-sulphur dioxide
+SO2 sulphur dioxide
