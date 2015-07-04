@@ -3,7 +3,6 @@ package eu.ratingpedia.chemically;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.gesture.Gesture;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -15,18 +14,15 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
 import android.view.GestureDetector;
-import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Random;
+import java.lang.reflect.Type;
 
 
 public class GameActivity extends Activity {
@@ -74,11 +70,14 @@ public class GameActivity extends Activity {
 
     private Typeface typeFace;
 
+
     GameView gameView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
 
         mediaPlayer = MediaPlayer.create(this,R.raw.music2);
         mediaPlayer.setLooping(true);
@@ -87,7 +86,12 @@ public class GameActivity extends Activity {
         playersMolecule = new Molecule();
         targetMolecule = new Molecule();
 
-        typeFace = Typeface.createFromAsset(getAssets(),"fonts/pacfont.ttf");
+        //typeFace = Typeface.createFromAsset(getAssets(), "fonts/pacfont.ttf");
+        typeFace = Typeface.createFromAsset(getAssets(), "fonts/chockablocknf.ttf");
+        //typeFace = Typeface.createFromAsset(getAssets(), "fonts/comicwhiterabbit.ttf");
+        //typeFace = Typeface.createFromAsset(getAssets(), "fonts/orangejuice.ttf");
+        //typeFace = Typeface.createFromAsset(getAssets(), "fonts/transformersmovie.ttf");
+        //typeFace = Typeface.createFromAsset(getAssets(), "fonts/caveman.ttf");
 
         myG = new GestureDetector(this,new GestureListener());
 
@@ -260,8 +264,8 @@ public class GameActivity extends Activity {
 
         //scaling bitmaps for the screen
         for(int i = 0;i < elements.length;i++){
-            elements[i] = Bitmap.createScaledBitmap(elements[i],
-                          blockSize - targetLineIndicator,blockSize-targetLineIndicator,false);
+                elements[i] = Bitmap.createScaledBitmap(elements[i],
+                        blockSize - targetLineIndicator, blockSize - targetLineIndicator, false);
         }
     }
 
@@ -338,6 +342,10 @@ public class GameActivity extends Activity {
 
             boolean same = true;
 
+            if (this.isMoving){
+                return false;
+            }
+
             for(int i = 0; i < molecule.numberOfAtoms;i++){
                 int xTarget = molecule.atoms[i].posX;
                 int yTarget = molecule.atoms[i].posY;
@@ -356,7 +364,7 @@ public class GameActivity extends Activity {
             }
 
             if (same){
-                Log.i("Winner of Level:",""+level);
+                Log.i("Winner of Level:", "" + level);
             }
             return same;
         }
@@ -457,11 +465,12 @@ public class GameActivity extends Activity {
 
         //drawing walls
         private void drawWalls(){
-            paint.setColor(Color.argb(125, 0, 255, 0));
+            paint.setColor(Color.argb(155, 0, 255, 0));//(125,0,255,0)
             for(int i = 0; i < numBlocksWide;i++) {
                 for (int j = 0; j < numBlocksHigh; j++) {
                     if (gameGrid[i][j] == -2) {
                         canvas.drawBitmap(elements[16],leftGap + i * blockSize,topGap + j * blockSize,paint);
+
                     }
                 }
             }
@@ -563,17 +572,22 @@ public class GameActivity extends Activity {
         }
 
         private void drawText() {
-            paint.setTextSize(blockSize);
-            paint.setColor(Color.argb(255, 0, 0, 155));
+            paint.setTextSize(blockSize * (float) 0.75);
+            //paint.setColor(Color.argb(255, 255, 155, 0));
+            //paint.setColor(Color.argb(255, 51, 31, 0));
+            //paint.setColor(Color.DKGRAY);
+            paint.setColor(Color.BLACK);
             paint.setTypeface(typeFace);
-            canvas.drawText("Level",leftGap+numBlocksWideBoard*blockSize,topGap+blockSize*2,paint);
+            canvas.drawText("Level " + Integer.toString(level), (leftGap + numBlocksWideBoard - 1) * blockSize, topGap + (blockSize) * 2, paint);
+            canvas.drawText("Score "+Integer.toString(level),  (leftGap + numBlocksWideBoard - 1) * blockSize, topGap + (blockSize) * 3, paint);
+            canvas.drawText("HiScore "+Integer.toString(level),  (leftGap + numBlocksWideBoard - 1) * blockSize, topGap + (blockSize) * 4, paint);
         }
 
         private void controlFPS() {
             long timeThisFrame = System.currentTimeMillis() - lastFrameTime;
-            long timeToSleep = 25 - timeThisFrame; //100
+            long timeToSleep = 10 - timeThisFrame; //100 25
             if(timeThisFrame > 0){
-                fps = (int) (250/timeThisFrame);   //1000
+                fps = (int) (200/timeThisFrame);   //1000 250
             }
             if(timeToSleep > 0){
                 try{

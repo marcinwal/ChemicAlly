@@ -43,8 +43,8 @@ public class MainActivity extends Activity {
     int numBlocksHeight;
     int [] title;
     int titleScale = 150; //100 normal
-    public static int [] selectedElements = new int[]{0,2,6,20,39,53,1,7,8,11,12,15,16,17,19,20,119};
-    public static String [] namesElemetns = new String[]{"Mi","He","C","Ca","Y","I","H","N","0",
+    public static int [] selectedElements = new int[]{0,2,6,20,39,53,1,7,8,11,12,15,16,17,19,20,127};//119
+    public static String [] namesElements = new String[]{"Mi","He","C","Ca","Y","I","H","N","0",
                                                         "Na","Mg","P","S","Cl","K","Ca","Wall"};
 
 
