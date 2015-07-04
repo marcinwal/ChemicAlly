@@ -9,6 +9,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
@@ -71,6 +72,8 @@ public class GameActivity extends Activity {
 
     boolean won;
 
+    private Typeface typeFace;
+
     GameView gameView;
 
     @Override
@@ -83,6 +86,8 @@ public class GameActivity extends Activity {
 
         playersMolecule = new Molecule();
         targetMolecule = new Molecule();
+
+        typeFace = Typeface.createFromAsset(getAssets(),"fonts/pacfont.ttf");
 
         myG = new GestureDetector(this,new GestureListener());
 
@@ -242,7 +247,8 @@ public class GameActivity extends Activity {
 
         numBlocksWide = 20;
         blockSize = screenWidth / numBlocksWide;
-        numBlocksHigh = ((screenHeight - topGap))/blockSize;
+        /*numBlocksHigh = ((screenHeight - topGap))/blockSize; */
+        numBlocksHigh = 12;
         numBlocksWideBoard = numBlocksWide - 4;//TODO minus right gap
         numBlocksHighBoard = numBlocksHigh;
 
@@ -558,7 +564,8 @@ public class GameActivity extends Activity {
 
         private void drawText() {
             paint.setTextSize(blockSize);
-            paint.setColor(Color.argb(255,0,0,155));
+            paint.setColor(Color.argb(255, 0, 0, 155));
+            paint.setTypeface(typeFace);
             canvas.drawText("Level",leftGap+numBlocksWideBoard*blockSize,topGap+blockSize*2,paint);
         }
 
