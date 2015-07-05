@@ -62,6 +62,7 @@ public class GameActivity extends Activity {
     int score;
     int hiScore;
     int level=1;
+    int maxLevel=3;
 
     int fps;
     Intent i;
