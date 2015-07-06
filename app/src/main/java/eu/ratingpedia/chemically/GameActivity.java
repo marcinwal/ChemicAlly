@@ -1,8 +1,6 @@
 package eu.ratingpedia.chemically;
 
-import android.app.ActionBar;
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -13,27 +11,23 @@ import android.graphics.Point;
 import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Display;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
+
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Type;
+import java.text.CollationKey;
 
 
 public class GameActivity extends Activity {
@@ -67,13 +61,13 @@ public class GameActivity extends Activity {
     int targetLineIndicator;
     int numberOfPhases;
 
-    String title;
-    String formula;
+    String title,previousTitle;
+    String formula,previousFormula;
 
-    int score;
-    int hiScore;
-    int level=1;
-    int maxLevel=3;
+    int score = 0;
+    int hiScore = 0;
+    int level = 1;
+    int maxLevel = 3;
 
     int fps;
     Intent i;
@@ -82,17 +76,9 @@ public class GameActivity extends Activity {
 
     private Typeface typeFace;
 
+    boolean congratulations;
 
-
-    //popup
-
-    PopupWindow popUp;
-    LinearLayout layout;
-    TextView tv;
-    ViewGroup.LayoutParams params;
-    LinearLayout mainLayout;
-    Button but;
-    boolean click = true;
+    Handler handler;
 
 
     GameView gameView;
@@ -101,12 +87,7 @@ public class GameActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        popUp = new PopupWindow(this);
-        layout = new LinearLayout(this);
-        mainLayout = new LinearLayout(this);
-        tv = new TextView(this);
-        but = new Button(this);
-        but.setText("Next Level");
+        handler = new Handler();
 
         mediaPlayer = MediaPlayer.create(this,R.raw.music2);
         mediaPlayer.setLooping(true);
@@ -114,6 +95,7 @@ public class GameActivity extends Activity {
 
         playersMolecule = new Molecule();
         targetMolecule = new Molecule();
+
 
         //typeFace = Typeface.createFromAsset(getAssets(), "fonts/pacfont.ttf");
         typeFace = Typeface.createFromAsset(getAssets(), "fonts/chockablocknf.ttf");
@@ -249,6 +231,8 @@ public class GameActivity extends Activity {
 
         //reading the formula
         int i = numberOfFields;
+        previousFormula = formula;
+        previousTitle = title;
         formula = "";
         char current = loadedBoard.charAt(i);
         while (current != ' '){
@@ -454,8 +438,10 @@ public class GameActivity extends Activity {
 
             won = playersMolecule.sameMolecule(targetMolecule);
             if (won){
+                score += targetMolecule.numberOfAtoms;
                 level ++;
-                congs();
+                congratulations = true;
+                showCongratulations();
                 updateScore();
                 saveScore();
                 resetAtoms();
@@ -488,10 +474,37 @@ public class GameActivity extends Activity {
         private void animateBoom() {
         }
 
-        private void congs() {
-            popUp.showAtLocation(mainLayout, Gravity.BOTTOM,10,10);
-            popUp.update(50,50,300,80);
-            click = true;
+        private void finishedGame(){
+
+        }
+
+        private void showCongratulations() {
+            if (congratulations){
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast toast;
+                        toast = Toast.makeText(getApplicationContext(),"Congratulations! Level "+(level-1)+" passed.",Toast.LENGTH_LONG);
+                        toast.setGravity(Gravity.CENTER, 0, 0);
+                        toast.setDuration(Toast.LENGTH_LONG);
+                        toast.setText("Congratulations!\n" + previousTitle + ":" + previousFormula + " passed.");
+
+                        TextView text = (TextView) toast.getView().findViewById(android.R.id.message);
+                        text.setTextColor(Color.BLACK);
+                        text.setShadowLayer(0, 0, 0, 0);
+                        text.setBackgroundColor(Color.argb(255,204,153,0));
+                        text.setTextSize(25f);
+                        text.setLines(4);
+                        //text.setTextScaleX(15f);
+                        //scoretext.setTypeface(typeFace);
+
+
+
+                        toast.show();
+                        congratulations = false;
+                    }
+                });
+            }
         }
 
         //drawing walls
@@ -610,8 +623,10 @@ public class GameActivity extends Activity {
             paint.setColor(Color.BLACK);
             paint.setTypeface(typeFace);
             canvas.drawText("Level " + Integer.toString(level), (leftGap + numBlocksWideBoard - 1) * blockSize, topGap + (blockSize) * 2, paint);
-            canvas.drawText("Score "+Integer.toString(level),  (leftGap + numBlocksWideBoard - 1) * blockSize, topGap + (blockSize) * 3, paint);
-            canvas.drawText("HiScore "+Integer.toString(level),  (leftGap + numBlocksWideBoard - 1) * blockSize, topGap + (blockSize) * 4, paint);
+            //canvas.drawText("Score" + Integer.toString(score), (leftGap + numBlocksWideBoard - 1) * blockSize, topGap + (blockSize) * 3, paint);
+            canvas.drawText("Score", (leftGap + numBlocksWideBoard - 1) * blockSize, topGap + (blockSize) * 3, paint);
+            canvas.drawText(Integer.toString(score),  (leftGap + numBlocksWideBoard) * blockSize, topGap + (blockSize) * 4, paint);
+            canvas.drawText("HiScore"+Integer.toString(hiScore),  (leftGap + numBlocksWideBoard - 1) * blockSize, topGap + (blockSize) * 5, paint);
         }
 
         private void controlFPS() {
