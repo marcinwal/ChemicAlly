@@ -1,6 +1,8 @@
 package eu.ratingpedia.chemically;
 
+import android.app.ActionBar;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -14,10 +16,19 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
 import android.view.GestureDetector;
+import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -72,13 +83,30 @@ public class GameActivity extends Activity {
     private Typeface typeFace;
 
 
+
+    //popup
+
+    PopupWindow popUp;
+    LinearLayout layout;
+    TextView tv;
+    ViewGroup.LayoutParams params;
+    LinearLayout mainLayout;
+    Button but;
+    boolean click = true;
+
+
     GameView gameView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
+        popUp = new PopupWindow(this);
+        layout = new LinearLayout(this);
+        mainLayout = new LinearLayout(this);
+        tv = new TextView(this);
+        but = new Button(this);
+        but.setText("Next Level");
 
         mediaPlayer = MediaPlayer.create(this,R.raw.music2);
         mediaPlayer.setLooping(true);
@@ -461,7 +489,9 @@ public class GameActivity extends Activity {
         }
 
         private void congs() {
-
+            popUp.showAtLocation(mainLayout, Gravity.BOTTOM,10,10);
+            popUp.update(50,50,300,80);
+            click = true;
         }
 
         //drawing walls
