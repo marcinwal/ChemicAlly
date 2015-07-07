@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:layout_margin="5px"
-    android:padding="10dp"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
     android:layout_gravity="center_horizontal">
 
-    <LinearLayout android:layout_width="wrap_content"
+    <TableLayout android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/elem127"
         android:orientation="horizontal">
@@ -17,14 +15,22 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="Large Text"
-            android:id="@+id/textToast1"/>
+            android:id="@+id/textToast1"
+            android:layout_gravity="center_vertical|top"
+            android:gravity="center_horizontal"
+            android:paddingTop="30dp"
+            android:textAlignment="center" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Medium Text"
-            android:id="@+id/textToast2" />
-    </LinearLayout>
+            android:id="@+id/textToast2"
+            android:layout_gravity="bottom"
+            android:paddingTop="30dp"
+            android:gravity="center_horizontal"
+            android:textAlignment="center" />
+    </TableLayout>
 
 </LinearLayout>

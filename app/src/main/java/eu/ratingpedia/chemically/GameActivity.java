@@ -503,26 +503,14 @@ public class GameActivity extends Activity {
                         toast.setGravity(Gravity.CENTER, 0, 0);
                         toast.setDuration(Toast.LENGTH_LONG);
 
-                        //taken out to fill in text later
-                        //toast.setText("Congratulations!\n" + previousTitle + ":" + previousFormula + " passed.");
-                        //TextView text = (TextView) toast.getView().findViewById(android.R.id.message);
-                        //text.setTextColor(Color.BLACK);
-                        //text.setShadowLayer(0, 0, 0, 0);
-                        //text.setBackgroundColor(Color.argb(255,204,153,0));
-                        //text.setTextSize(25f);
-                        //text.setLines(4);
-                        //taken out
                         TextView text1 = (TextView) customToastroot.findViewById(R.id.textToast1);
                         TextView text2 = (TextView) customToastroot.findViewById(R.id.textToast2);
                         text1.setText("Well done!");
                         text2.setText(previousTitle + ":" + previousFormula + " passed.");
                         text1.setTextSize(25f);
                         text1.setTextColor(Color.BLACK);
-                        text1.setGravity(Gravity.CENTER);
                         text2.setTextSize(25f);
                         text2.setTextColor(Color.BLACK);
-                        text2.setGravity(Gravity.CENTER);
-                        //text.setTypeface(typeFace);
                         toast.setGravity(Gravity.CENTER,0,0);
 
                         toast.show();
