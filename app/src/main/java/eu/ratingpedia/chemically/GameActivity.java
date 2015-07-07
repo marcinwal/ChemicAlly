@@ -17,9 +17,12 @@ import android.view.Display;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -483,22 +486,44 @@ public class GameActivity extends Activity {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
+
+                        //added
+                        LayoutInflater inflater = getLayoutInflater();
+                        View customToastroot = inflater.inflate(R.layout.mycustom_toast,null);
+
+                        //end of added
+
+
                         Toast toast;
                         toast = Toast.makeText(getApplicationContext(),"Congratulations! Level "+(level-1)+" passed.",Toast.LENGTH_LONG);
+                        //added
+                        toast.setView(customToastroot);
+                        //added
+
                         toast.setGravity(Gravity.CENTER, 0, 0);
                         toast.setDuration(Toast.LENGTH_LONG);
-                        toast.setText("Congratulations!\n" + previousTitle + ":" + previousFormula + " passed.");
 
-                        TextView text = (TextView) toast.getView().findViewById(android.R.id.message);
-                        text.setTextColor(Color.BLACK);
-                        text.setShadowLayer(0, 0, 0, 0);
-                        text.setBackgroundColor(Color.argb(255,204,153,0));
-                        text.setTextSize(25f);
-                        text.setLines(4);
-                        //text.setTextScaleX(15f);
-                        //scoretext.setTypeface(typeFace);
-
-
+                        //taken out to fill in text later
+                        //toast.setText("Congratulations!\n" + previousTitle + ":" + previousFormula + " passed.");
+                        //TextView text = (TextView) toast.getView().findViewById(android.R.id.message);
+                        //text.setTextColor(Color.BLACK);
+                        //text.setShadowLayer(0, 0, 0, 0);
+                        //text.setBackgroundColor(Color.argb(255,204,153,0));
+                        //text.setTextSize(25f);
+                        //text.setLines(4);
+                        //taken out
+                        TextView text1 = (TextView) customToastroot.findViewById(R.id.textToast1);
+                        TextView text2 = (TextView) customToastroot.findViewById(R.id.textToast2);
+                        text1.setText("Well done!");
+                        text2.setText(previousTitle + ":" + previousFormula + " passed.");
+                        text1.setTextSize(25f);
+                        text1.setTextColor(Color.BLACK);
+                        text1.setGravity(Gravity.CENTER);
+                        text2.setTextSize(25f);
+                        text2.setTextColor(Color.BLACK);
+                        text2.setGravity(Gravity.CENTER);
+                        //text.setTypeface(typeFace);
+                        toast.setGravity(Gravity.CENTER,0,0);
 
                         toast.show();
                         congratulations = false;
