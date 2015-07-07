@@ -441,14 +441,19 @@ public class GameActivity extends Activity {
 
             won = playersMolecule.sameMolecule(targetMolecule);
             if (won){
-                score += targetMolecule.numberOfAtoms;
-                level ++;
+
                 congratulations = true;
+
                 showCongratulations();
-                updateScore();
-                saveScore();
-                resetAtoms();
-                setBoard(level);
+
+                if (!congratulations) {
+                    score += targetMolecule.numberOfAtoms;
+                    level ++;
+                    updateScore();
+                    saveScore();
+                    resetAtoms();
+                    setBoard(level);
+                }
 
             }
 
@@ -487,37 +492,31 @@ public class GameActivity extends Activity {
                     @Override
                     public void run() {
 
-                        //added
                         LayoutInflater inflater = getLayoutInflater();
                         View customToastroot = inflater.inflate(R.layout.mycustom_toast,null);
-
-                        //end of added
-
-
                         Toast toast;
-                        toast = Toast.makeText(getApplicationContext(),"Congratulations! Level "+(level-1)+" passed.",Toast.LENGTH_LONG);
-                        //added
+                        toast = Toast.makeText(getApplicationContext(),"Congratulations! Level "+(level-1)+" passed.",Toast.LENGTH_SHORT);
                         toast.setView(customToastroot);
-                        //added
 
                         toast.setGravity(Gravity.CENTER, 0, 0);
-                        toast.setDuration(Toast.LENGTH_LONG);
+                        toast.setDuration(Toast.LENGTH_SHORT);
 
                         TextView text1 = (TextView) customToastroot.findViewById(R.id.textToast1);
                         TextView text2 = (TextView) customToastroot.findViewById(R.id.textToast2);
                         text1.setText("Well done!");
-                        text2.setText(previousTitle + ":" + previousFormula + " passed.");
+                        text2.setText(previousTitle + "  " + previousFormula);
                         text1.setTextSize(25f);
                         text1.setTextColor(Color.BLACK);
                         text2.setTextSize(25f);
                         text2.setTextColor(Color.BLACK);
-                        toast.setGravity(Gravity.CENTER,0,0);
-
+                        toast.setGravity(Gravity.CENTER, 0, 0);
                         toast.show();
-                        congratulations = false;
+
                     }
                 });
             }
+            congratulations = false;
+
         }
 
         //drawing walls
