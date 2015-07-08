@@ -461,6 +461,7 @@ public class GameActivity extends Activity {
 
             if (won){
                 showCongratulationsDialog();
+                won = false;
             }
         }
 
@@ -469,8 +470,10 @@ public class GameActivity extends Activity {
             level ++;
             updateScore();
             saveScore();
+            playingMolecules = false;
             resetAtoms();
             setBoard(level);
+            playingMolecules = true;
         }
 
         private void resetAtoms() {
@@ -502,13 +505,13 @@ public class GameActivity extends Activity {
 
         private void showCongratulationsDialog(/*final Context context*/){
 
-            won = false;
             handler.post(new Runnable() {
 
 
 
                 @Override
                 public void run() {
+                    won = false;
 
                     TextView text1 = (TextView) dialog.findViewById(R.id.textToast1);
                     TextView text2 = (TextView) dialog.findViewById(R.id.textToast2);
