@@ -1,6 +1,8 @@
 package eu.ratingpedia.chemically;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -22,7 +24,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.widget.LinearLayout;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,7 +32,6 @@ import android.widget.Toast;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.CollationKey;
 
 
 public class GameActivity extends Activity {
@@ -484,6 +485,22 @@ public class GameActivity extends Activity {
 
         private void finishedGame(){
 
+        }
+
+
+        private void showCongratulationsDialog(){
+            final Dialog dialog = new Dialog(getApplicationContext());
+            dialog.setContentView(R.layout.mycustom_dialog);
+            dialog.setTitle("Level solved");
+
+            Button dialogButton = (Button) dialog.findViewById(R.id.buttonDialog);
+            dialogButton.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    congratulations = false;
+                    dialog.dismiss();
+                }
+            });
         }
 
         private void showCongratulations() {
