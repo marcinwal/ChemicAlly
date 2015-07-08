@@ -3,6 +3,7 @@ package eu.ratingpedia.chemically;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -24,6 +25,8 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -84,14 +87,19 @@ public class GameActivity extends Activity {
 
     Handler handler;
 
+    //final Context contextForDialog = this;
 
     GameView gameView;
 
+    Dialog dialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
 
         handler = new Handler();
+
 
         mediaPlayer = MediaPlayer.create(this,R.raw.music2);
         mediaPlayer.setLooping(true);
@@ -398,10 +406,19 @@ public class GameActivity extends Activity {
 
 
         public GameView(Context context) {
+
             super(context);
+
             ourHolder = getHolder();
             paint = new Paint();
             setBoard(level);
+
+
+            dialog = new Dialog(this.getContext());
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.mycustom_dialog);
+
+
         }
 
         @Override
@@ -441,24 +458,19 @@ public class GameActivity extends Activity {
             }
 
             won = playersMolecule.sameMolecule(targetMolecule);
+
             if (won){
-
-                congratulations = true;
-
-                showCongratulations();
-
-                if (!congratulations) {
-                    score += targetMolecule.numberOfAtoms;
-                    level ++;
-                    updateScore();
-                    saveScore();
-                    resetAtoms();
-                    setBoard(level);
-                }
-
+                showCongratulationsDialog();
             }
+        }
 
-
+        private void newLevel(){
+            score += targetMolecule.numberOfAtoms;
+            level ++;
+            updateScore();
+            saveScore();
+            resetAtoms();
+            setBoard(level);
         }
 
         private void resetAtoms() {
@@ -488,17 +500,36 @@ public class GameActivity extends Activity {
         }
 
 
-        private void showCongratulationsDialog(){
-            final Dialog dialog = new Dialog(getApplicationContext());
-            dialog.setContentView(R.layout.mycustom_dialog);
-            dialog.setTitle("Level solved");
+        private void showCongratulationsDialog(/*final Context context*/){
 
-            Button dialogButton = (Button) dialog.findViewById(R.id.buttonDialog);
-            dialogButton.setOnClickListener(new OnClickListener() {
+
+            handler.post(new Runnable() {
+
+
+
                 @Override
-                public void onClick(View v) {
-                    congratulations = false;
-                    dialog.dismiss();
+                public void run() {
+
+                    TextView text1 = (TextView) dialog.findViewById(R.id.textToast1);
+                    TextView text2 = (TextView) dialog.findViewById(R.id.textToast2);
+
+                    text1.setText("Well done!");
+                    text2.setText(title + "  " + formula);
+                    text1.setTextSize(25f);
+                    text1.setTextColor(Color.BLACK);
+                    text2.setTextSize(25f);
+                    text2.setTextColor(Color.BLACK);
+
+                    Button dialogButton = (Button) dialog.findViewById(R.id.buttonDialog);
+                    dialogButton.setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            won = false;
+                            newLevel();
+                            dialog.dismiss();
+                        }
+                    });
+                    dialog.show();
                 }
             });
         }
@@ -655,7 +686,7 @@ public class GameActivity extends Activity {
             //canvas.drawText("Score" + Integer.toString(score), (leftGap + numBlocksWideBoard - 1) * blockSize, topGap + (blockSize) * 3, paint);
             canvas.drawText("Score", (leftGap + numBlocksWideBoard - 1) * blockSize, topGap + (blockSize) * 3, paint);
             canvas.drawText(Integer.toString(score),  (leftGap + numBlocksWideBoard) * blockSize, topGap + (blockSize) * 4, paint);
-            canvas.drawText("HiScore"+Integer.toString(hiScore),  (leftGap + numBlocksWideBoard - 1) * blockSize, topGap + (blockSize) * 5, paint);
+            canvas.drawText("HiScore" + Integer.toString(hiScore), (leftGap + numBlocksWideBoard - 1) * blockSize, topGap + (blockSize) * 5, paint);
         }
 
         private void controlFPS() {
