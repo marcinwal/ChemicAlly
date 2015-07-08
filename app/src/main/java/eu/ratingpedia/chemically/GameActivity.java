@@ -197,7 +197,6 @@ public class GameActivity extends Activity {
 
         String loadedBoard;
         loadedBoard = loadLevel(level);
-        Log.i("level",loadedBoard);
         useLoadedLevel(loadedBoard,gameGrid);
 
     }
@@ -260,8 +259,6 @@ public class GameActivity extends Activity {
             title += current;
             i++;
         }
-        Log.i("Title",title);
-        Log.i("Formula",formula);
     }
 
     private void configureDisplay() {
@@ -388,9 +385,6 @@ public class GameActivity extends Activity {
 
             }
 
-            if (same){
-                Log.i("Winner of Level:", "" + level);
-            }
             return same;
         }
     }
