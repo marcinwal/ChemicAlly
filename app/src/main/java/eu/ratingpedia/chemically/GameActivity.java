@@ -411,6 +411,7 @@ public class GameActivity extends Activity {
             dialog = new Dialog(this.getContext());
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
             dialog.setContentView(R.layout.mycustom_dialog);
+            dialog.setCancelable(false);
 
 
         }
@@ -516,6 +517,7 @@ public class GameActivity extends Activity {
                     text2.setTextSize(25f);
                     text2.setTextColor(Color.BLACK);
 
+
                     Button dialogButton = (Button) dialog.findViewById(R.id.buttonDialog);
                     dialogButton.setOnClickListener(new OnClickListener() {
                         @Override
@@ -524,6 +526,7 @@ public class GameActivity extends Activity {
                             dialog.dismiss();
                         }
                     });
+
                     dialog.show();
                 }
             });
