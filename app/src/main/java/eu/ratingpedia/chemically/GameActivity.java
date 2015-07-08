@@ -83,7 +83,7 @@ public class GameActivity extends Activity {
 
     private Typeface typeFace;
 
-    boolean congratulations;
+    boolean congratulations = true;
 
     Handler handler;
 
@@ -459,21 +459,19 @@ public class GameActivity extends Activity {
 
             won = playersMolecule.sameMolecule(targetMolecule);
 
-            if (won){
+            if (won && congratulations){
                 showCongratulationsDialog();
-                won = false;
             }
         }
 
         private void newLevel(){
-            score += targetMolecule.numberOfAtoms;
+            score += targetMolecule.numberOfAtoms * level;
             level ++;
             updateScore();
             saveScore();
-            playingMolecules = false;
             resetAtoms();
             setBoard(level);
-            playingMolecules = true;
+            congratulations = true;
         }
 
         private void resetAtoms() {
@@ -511,8 +509,9 @@ public class GameActivity extends Activity {
 
                 @Override
                 public void run() {
-                    won = false;
 
+                    won = false;
+                    congratulations = false;
                     TextView text1 = (TextView) dialog.findViewById(R.id.textToast1);
                     TextView text2 = (TextView) dialog.findViewById(R.id.textToast2);
 
