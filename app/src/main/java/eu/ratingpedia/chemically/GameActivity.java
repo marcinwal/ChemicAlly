@@ -502,7 +502,7 @@ public class GameActivity extends Activity {
 
         private void showCongratulationsDialog(/*final Context context*/){
 
-
+            won = false;
             handler.post(new Runnable() {
 
 
@@ -524,7 +524,6 @@ public class GameActivity extends Activity {
                     dialogButton.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            won = false;
                             newLevel();
                             dialog.dismiss();
                         }
@@ -677,9 +676,6 @@ public class GameActivity extends Activity {
 
         private void drawText() {
             paint.setTextSize(blockSize * (float) 0.75);
-            //paint.setColor(Color.argb(255, 255, 155, 0));
-            //paint.setColor(Color.argb(255, 51, 31, 0));
-            //paint.setColor(Color.DKGRAY);
             paint.setColor(Color.BLACK);
             paint.setTypeface(typeFace);
             canvas.drawText("Level " + Integer.toString(level), (leftGap + numBlocksWideBoard - 1) * blockSize, topGap + (blockSize) * 2, paint);
