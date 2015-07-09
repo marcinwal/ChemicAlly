@@ -1,9 +1,7 @@
 package eu.ratingpedia.chemically;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -26,7 +24,6 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -86,8 +83,6 @@ public class GameActivity extends Activity {
     boolean congratulations = true;
 
     Handler handler;
-
-    //final Context contextForDialog = this;
 
     GameView gameView;
 

@@ -3,7 +3,6 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:background="@drawable/mycustom_toast_border"
     android:layout_gravity="center_horizontal">
 
     <TableLayout android:layout_width="wrap_content"
@@ -35,7 +34,8 @@
 
             <Button
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
+                android:background="@drawable/corners"
                 android:text="OK"
                 android:id="@+id/buttonDialog"
                 android:clickable="true"
@@ -43,7 +43,9 @@
                 android:layout_marginLeft="50dp"
                 android:layout_marginRight="50dp"
                 android:layout_marginTop="20dp"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:textStyle="bold"
+                />
 
     </TableLayout>
 
