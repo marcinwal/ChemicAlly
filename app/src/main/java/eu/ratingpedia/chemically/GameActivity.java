@@ -78,6 +78,7 @@ public class GameActivity extends Activity {
     Intent i;
 
     boolean won;
+    boolean finishedGame = false;
 
     private Typeface typeFace;
 
