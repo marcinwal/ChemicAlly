@@ -103,6 +103,7 @@ public class GameActivity extends Activity {
 
 
         mediaPlayer = MediaPlayer.create(this,R.raw.music2);
+        //mediaPlayer = MediaPlayer.create(this,R.raw.music3);
         mediaPlayer.setLooping(true);
         mediaPlayer.start();
 
