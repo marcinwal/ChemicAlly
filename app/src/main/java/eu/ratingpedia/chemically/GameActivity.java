@@ -13,6 +13,7 @@ import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.view.GestureDetectorCompat;
 import android.util.Log;
 import android.view.Display;
 import android.view.GestureDetector;
@@ -76,6 +77,9 @@ public class GameActivity extends Activity {
 
     int fps;
     Intent i;
+
+    int resetX = 17;
+    int resetY = 10;
 
     boolean won;
     boolean finishedGame = false;
@@ -141,14 +145,23 @@ public class GameActivity extends Activity {
 
         @Override
         public void onLongPress(MotionEvent event) {
-            Log.d("LongPress:", "onLongPress: " + event.toString());
+            int[] position ;//=  new int[2]
+            Log.i("LongPress:", "onLongPress: " + event.toString());
+
+            position = findXY(event.getX(),event.getY());
+            if ((position[0] == resetX) && (position[1] == resetY)){
+                gameView.resetLevel();
+                Log.i("reset level",""+level);
+            }
         }
+
+
 
         @Override
         public boolean onFling(MotionEvent e1,MotionEvent e2,float velocityX,float velocityY){
             if(!playersMolecule.isMoving) {
-                int[] position =  new int[2];
-                int[] position2 = new int[2];
+                int[] position;// =  new int[2];
+                int[] position2;// = new int[2];
                 int direction;
 
                 position = findXY(e1.getX(), e1.getY());
@@ -206,7 +219,7 @@ public class GameActivity extends Activity {
 
     private void useLoadedLevel(String loadedBoard, int[][] gameGrid) {
         int numberOfFields = numBlocksWide * numBlocksHigh;
-        int atomSymbol = -1;
+        int atomSymbol;// = -1;
         int targetSymbol;
         for (int i = 0; i < numberOfFields;i++){
             atomSymbol = -1;
@@ -460,6 +473,13 @@ public class GameActivity extends Activity {
             if (won && congratulations){
                 showCongratulationsDialog();
             }
+        }
+
+        private void resetLevel(){
+            congratulations = false;
+            resetAtoms();
+            setBoard(level);
+            congratulations = true;
         }
 
         private void newLevel(){

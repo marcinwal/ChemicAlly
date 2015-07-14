@@ -43,9 +43,9 @@ public class MainActivity extends Activity {
     int numBlocksHeight;
     int [] title;
     int titleScale = 150; //100 normal
-    public static int [] selectedElements = new int[]{0,2,6,20,39,53,1,7,8,11,12,15,16,17,19,20,127};//119
+    public static int [] selectedElements = new int[]{0,2,6,20,39,53,1,7,8,11,12,15,16,17,19,20,127,128};
     public static String [] namesElements = new String[]{"Mi","He","C","Ca","Y","I","H","N","0",
-                                                        "Na","Mg","P","S","Cl","K","Ca","Wall"};
+                                                        "Na","Mg","P","S","Cl","K","Ca","Wall","Reset"};
 
 
 
@@ -85,7 +85,7 @@ public class MainActivity extends Activity {
         Point size = new Point();
         display.getSize(size);
 
-        numberOfElements = 17;//60
+        numberOfElements = 18;//17
         elements = new Bitmap[numberOfElements];
 
         screenWidth = size.x;

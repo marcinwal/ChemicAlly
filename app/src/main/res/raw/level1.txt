@@ -8,6 +8,6 @@ x    x         xxxxx
 x   nx         xxxxx
 x       x      xjnxx
 x       x      xxxxx
-x       xjn    xxxxx
+x       xjn    xxrxx
 xxxxxxxxxxxxxxxxxxxx
-NaCl salt
+NaCl Salt
