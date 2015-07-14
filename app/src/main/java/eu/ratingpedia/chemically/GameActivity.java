@@ -127,6 +127,7 @@ public class GameActivity extends Activity {
 
     public boolean onTouchEvent(MotionEvent event){
         myG.onTouchEvent(event);
+
         return true;
     }
 
@@ -136,6 +137,11 @@ public class GameActivity extends Activity {
             int x = (int) (posX - leftGap)/blockSize;
             int y = (int) (posY - topGap)/blockSize;
             return new int[]{x,y};
+        }
+
+        @Override
+        public void onLongPress(MotionEvent event) {
+            Log.d("LongPress:", "onLongPress: " + event.toString());
         }
 
         @Override
