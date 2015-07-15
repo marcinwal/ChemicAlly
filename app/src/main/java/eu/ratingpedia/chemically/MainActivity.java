@@ -43,9 +43,9 @@ public class MainActivity extends Activity {
     int numBlocksHeight;
     int [] title;
     int titleScale = 150; //100 normal
-    public static int [] selectedElements = new int[]{0,2,6,20,39,53,1,7,8,11,12,15,16,17,19,20,127,128};
+    public static int [] selectedElements = new int[]{0,2,6,20,39,53,1,7,8,11,12,15,16,17,19,20,127,128,129,130};
     public static String [] namesElements = new String[]{"Mi","He","C","Ca","Y","I","H","N","0",
-                                                        "Na","Mg","P","S","Cl","K","Ca","Wall","Reset"};
+                                                        "Na","Mg","P","S","Cl","K","Ca","Wall","Reset","-","+"};
 
 
 
@@ -85,7 +85,7 @@ public class MainActivity extends Activity {
         Point size = new Point();
         display.getSize(size);
 
-        numberOfElements = 18;//17
+        numberOfElements = 20;
         elements = new Bitmap[numberOfElements];
 
         screenWidth = size.x;
@@ -159,8 +159,7 @@ public class MainActivity extends Activity {
             }
         }
 
-        private void placeRandomly() {
-        }
+
 
         private void drawElements() {
 
@@ -170,11 +169,8 @@ public class MainActivity extends Activity {
                 canvas = ourHolder.lockCanvas();
 
                 canvas.drawColor(Color.DKGRAY);
-                //elementsBackgroud();
-                //elementsTestDraw();
-                //drawing the background
-                //elementsTestGrid(12,7);
-                elementsTestGrid(selectedElements.length-6,6);
+                elementsTestGrid(selectedElements.length-10,6);
+
 
                 paint.setColor(Color.argb(255, 184, 138, 0));
                 paint.setTextSize(150);
@@ -188,28 +184,6 @@ public class MainActivity extends Activity {
             
         }
 
-        private void elementsBackgroud() {
-            Random randInt = new Random();
-            int testX,testY;
-            for(int i = 0; i < 9;i++ ) {
-                testX = randInt.nextInt(numBlocksWidth);
-                testY = randInt.nextInt(numBlocksWidth);
-                canvas.drawBitmap(elements[randInt.nextInt(elements.length-2)], testX * blockSize, testY * blockSize, paint);
-            }
-        }
-
-        private void elementsTestDraw(){
-            for(int i = 0;i < numBlocksWidth;i++)
-                for(int j =0; j < numBlocksHeight + 1;j++){
-                    if ((i+j) % 3 == 0) {
-                        canvas.drawBitmap(elements[34], i * blockSize, j * blockSize, paint);
-                    }else if ((i+j) % 3 == 1){
-                        canvas.drawBitmap(elements[17], i * blockSize, j * blockSize, paint);
-                    }else{
-                        canvas.drawBitmap(elements[19], i * blockSize, j * blockSize, paint);
-                    }
-                }
-        }
 
         private void elementsTestGrid(int howMany,int offset){
             paint.setAlpha(100);
@@ -292,13 +266,11 @@ public class MainActivity extends Activity {
     }
 
     public boolean onKeyDown(int keyCode,KeyEvent event){
-        /*if(keyCode == KeyEvent.KEYCODE_BACK){
+        if(keyCode == KeyEvent.KEYCODE_BACK){
             elementsAnimate.pause();
             finish();
             return true;
         }
-        return false;*/
-        finish();
-        return true;
+        return false;
     }
 }

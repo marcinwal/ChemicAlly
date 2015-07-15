@@ -13,7 +13,6 @@ import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.view.GestureDetectorCompat;
 import android.util.Log;
 import android.view.Display;
 import android.view.GestureDetector;
@@ -69,20 +68,22 @@ public class GameActivity extends Activity {
     String title,previousTitle;
     String formula,previousFormula;
 
-    int score = 0;
-    int hiScore = 0;
-    int level = 1;
+    static int score = 0;
+    static int hiScore = 0;
+    static int level = 1;
+    static int maxUnlockedLevel = 0; //level which can be loaded from start;depends on previous play
     int maxLevel = 3;  //maximum number of levels
-    int freeLevel = 1; //level which can be loaded from start;depends on previous play
 
     int fps;
     Intent i;
 
-    int resetX = 17;
-    int resetY = 10;
+    //grid where reset button is located
+    int[] resetLevel = {17,10};
+    int[] minusLevel = {16,11};
+    int[] plusLevel =  {18,11};
+
 
     boolean won;
-    boolean finishedGame = false;
 
     private Typeface typeFace;
 
@@ -102,8 +103,8 @@ public class GameActivity extends Activity {
         handler = new Handler();
 
 
-        mediaPlayer = MediaPlayer.create(this,R.raw.music2);
-        //mediaPlayer = MediaPlayer.create(this,R.raw.music3);
+        //mediaPlayer = MediaPlayer.create(this,R.raw.music2);
+        mediaPlayer = MediaPlayer.create(this,R.raw.music3);
         mediaPlayer.setLooping(true);
         mediaPlayer.start();
 
@@ -146,14 +147,27 @@ public class GameActivity extends Activity {
 
         @Override
         public void onLongPress(MotionEvent event) {
-            int[] position ;//=  new int[2]
+            int[] position;
             Log.i("LongPress:", "onLongPress: " + event.toString());
 
             position = findXY(event.getX(),event.getY());
-            if ((position[0] == resetX) && (position[1] == resetY)){
+            if ((position[0] == resetLevel[0]) && (position[1] == resetLevel[1])){
                 gameView.resetLevel();
                 Log.i("reset level",""+level);
             }
+
+            if ((position[0] == minusLevel[0]) && (position[1] == minusLevel[1] && level > 1)){
+                level--;
+                gameView.resetLevel();
+                Log.i("minus level",""+level);
+            }
+
+            if ((position[0] == plusLevel[0]) && (position[1] == plusLevel[1]) && level <= maxUnlockedLevel && maxUnlockedLevel != 0){
+                level++;
+                gameView.resetLevel();
+                Log.i("plus level",""+level);
+            }
+
         }
 
 
@@ -161,8 +175,8 @@ public class GameActivity extends Activity {
         @Override
         public boolean onFling(MotionEvent e1,MotionEvent e2,float velocityX,float velocityY){
             if(!playersMolecule.isMoving) {
-                int[] position;// =  new int[2];
-                int[] position2;// = new int[2];
+                int[] position;
+                int[] position2;
                 int direction;
 
                 position = findXY(e1.getX(), e1.getY());
@@ -171,7 +185,7 @@ public class GameActivity extends Activity {
                 direction = (Math.abs(position[0]-position2[0])>Math.abs(position[1]-position2[1]))?
                             (position[0] > position2[0]? 4: 2 ) :
                             (position[1] > position2[1]? 1: 3 );
-                // TODO if initial position is ok with element
+
                 int atom = gameGrid[position[0]][position[1]];
                 if (atom > -1){ //no empty space -1 nor wall -2
                     playersMolecule.atoms[atom].direction = direction;
@@ -220,7 +234,7 @@ public class GameActivity extends Activity {
 
     private void useLoadedLevel(String loadedBoard, int[][] gameGrid) {
         int numberOfFields = numBlocksWide * numBlocksHigh;
-        int atomSymbol;// = -1;
+        int atomSymbol;
         int targetSymbol;
         for (int i = 0; i < numberOfFields;i++){
             atomSymbol = -1;
@@ -485,6 +499,13 @@ public class GameActivity extends Activity {
 
         private void newLevel(){
             score += targetMolecule.numberOfAtoms * level;
+            if (level > maxUnlockedLevel) {
+                maxUnlockedLevel = level;
+            }
+            if (level == maxLevel){
+                level = 0;
+                showCredits();
+            }
             level ++;
             updateScore();
             saveScore();
@@ -519,6 +540,10 @@ public class GameActivity extends Activity {
 
         }
 
+        private void showCredits(){
+
+        }
+
 
         private void showCongratulationsDialog(/*final Context context*/){
 
@@ -534,8 +559,10 @@ public class GameActivity extends Activity {
                     TextView text1 = (TextView) dialog.findViewById(R.id.textToast1);
                     TextView text2 = (TextView) dialog.findViewById(R.id.textToast2);
 
-                    text1.setText("Well done!");
-                    text2.setText(title + "  " + formula);
+                    String show = level == maxLevel? "\nYou finished the game!" : "Well done!";
+
+                    text1.setText(show);
+                    text2.setText(title + ": " + formula);
                     text1.setTextSize(25f);
                     text1.setTextColor(Color.BLACK);
                     text2.setTextSize(25f);
