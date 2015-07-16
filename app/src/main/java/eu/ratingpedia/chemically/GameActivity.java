@@ -41,14 +41,14 @@ public class GameActivity extends Activity {
     MediaPlayer mediaPlayer;
     Canvas canvas;
     Bitmap [] elements = MainActivity.elements; //to avoid loading again
-    int [] selectedElements = MainActivity.selectedElements;
-    int [][] gameGrid;
+    static int [][] gameGrid; //NOWADDED static
     long lastFrameTime;
+
 
     int maxNumberAtomsInMolecule = 10;
 
-    Molecule playersMolecule; //players molecule scattered all over
-    Molecule targetMolecule;  //target molecules
+    static Molecule playersMolecule; //players molecule scattered all over   NOWADDED static
+    static Molecule targetMolecule;  //target molecules                      NOWADDED static
 
     int screenWidth = MainActivity.screenWidth;
     int screenHeight = MainActivity.screenHeight;
@@ -69,10 +69,10 @@ public class GameActivity extends Activity {
     String formula,previousFormula;
 
     static int score = 0;
-    static int hiScore = 0;
     static int level = 1;
     static int maxUnlockedLevel = 0; //level which can be loaded from start;depends on previous play
     int maxLevel = 3;  //maximum number of levels
+
 
     int fps;
     Intent i;
@@ -84,11 +84,11 @@ public class GameActivity extends Activity {
 
 
     boolean won;
+    static boolean levelLoaded = false; //NOWADDED
 
     private Typeface typeFace;
 
     boolean congratulations = true;
-
     Handler handler;
 
     GameView gameView;
@@ -103,21 +103,15 @@ public class GameActivity extends Activity {
         handler = new Handler();
 
 
-        //mediaPlayer = MediaPlayer.create(this,R.raw.music2);
-        mediaPlayer = MediaPlayer.create(this,R.raw.music3);
+        mediaPlayer = MediaPlayer.create(this,R.raw.music2);
+        //mediaPlayer = MediaPlayer.create(this,R.raw.music3);
         mediaPlayer.setLooping(true);
         mediaPlayer.start();
 
         playersMolecule = new Molecule();
         targetMolecule = new Molecule();
 
-
-        //typeFace = Typeface.createFromAsset(getAssets(), "fonts/pacfont.ttf");
         typeFace = Typeface.createFromAsset(getAssets(), "fonts/chockablocknf.ttf");
-        //typeFace = Typeface.createFromAsset(getAssets(), "fonts/comicwhiterabbit.ttf");
-        //typeFace = Typeface.createFromAsset(getAssets(), "fonts/orangejuice.ttf");
-        //typeFace = Typeface.createFromAsset(getAssets(), "fonts/transformersmovie.ttf");
-        //typeFace = Typeface.createFromAsset(getAssets(), "fonts/caveman.ttf");
 
         myG = new GestureDetector(this,new GestureListener());
 
@@ -225,11 +219,9 @@ public class GameActivity extends Activity {
     }
 
     private void setBoard(int level){
-
         String loadedBoard;
         loadedBoard = loadLevel(level);
-        useLoadedLevel(loadedBoard,gameGrid);
-
+        useLoadedLevel(loadedBoard, gameGrid);
     }
 
     private void useLoadedLevel(String loadedBoard, int[][] gameGrid) {
@@ -309,7 +301,9 @@ public class GameActivity extends Activity {
         numBlocksWideBoard = numBlocksWide - 4;//TODO minus right gap
         numBlocksHighBoard = numBlocksHigh;
 
-        gameGrid = new int[numBlocksWide][numBlocksHigh]; // CHANGE WAS HighBoard
+        if(!levelLoaded) { //NOWADDED
+            gameGrid = new int[numBlocksWide][numBlocksHigh]; // CHANGE WAS HighBoard
+        }                  //NOWADDED
 
         targetLineIndicator = 2; //where to place the molecule
         numberOfPhases = 8;
@@ -436,7 +430,10 @@ public class GameActivity extends Activity {
 
             ourHolder = getHolder();
             paint = new Paint();
-            setBoard(level);
+            if (!levelLoaded) { //NOWADDED
+                setBoard(level);
+                levelLoaded = true; //NOWADDED
+            }
 
 
             dialog = new Dialog(this.getContext());
