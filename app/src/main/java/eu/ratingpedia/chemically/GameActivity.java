@@ -302,7 +302,7 @@ public class GameActivity extends Activity {
         numBlocksHighBoard = numBlocksHigh;
 
         if(!levelLoaded) { //NOWADDED
-            gameGrid = new int[numBlocksWide][numBlocksHigh]; // CHANGE WAS HighBoard
+            gameGrid = new int[numBlocksWide][numBlocksHigh];
         }                  //NOWADDED
 
         targetLineIndicator = 2; //where to place the molecule
