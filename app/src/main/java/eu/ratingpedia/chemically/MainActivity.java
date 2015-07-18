@@ -50,7 +50,7 @@ public class MainActivity extends Activity {
 
 
 
-    Intent myIntent;//starting the game with touch screen
+    static Intent myIntent;//NOWADDED static
 
 
 

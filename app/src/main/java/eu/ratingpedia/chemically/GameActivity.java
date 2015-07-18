@@ -75,12 +75,12 @@ public class GameActivity extends Activity {
 
 
     int fps;
-    Intent i;
+    static Intent i; //NOWADDED static
 
     //grid where reset button is located
-    int[] resetLevel = {17,10};
-    int[] minusLevel = {16,11};
-    int[] plusLevel =  {18,11};
+    int[] resetLevelButton = {17,10};
+    int[] minusLevelButton = {16,11};
+    int[] plusLevelButton =  {18,11};
 
 
     boolean won;
@@ -145,26 +145,24 @@ public class GameActivity extends Activity {
             Log.i("LongPress:", "onLongPress: " + event.toString());
 
             position = findXY(event.getX(),event.getY());
-            if ((position[0] == resetLevel[0]) && (position[1] == resetLevel[1])){
+            if ((position[0] == resetLevelButton[0]) && (position[1] == resetLevelButton[1])){
                 gameView.resetLevel();
                 Log.i("reset level",""+level);
             }
 
-            if ((position[0] == minusLevel[0]) && (position[1] == minusLevel[1] && level > 1)){
+            if ((position[0] == minusLevelButton[0]) && (position[1] == minusLevelButton[1] && level > 1)){
                 level--;
                 gameView.resetLevel();
                 Log.i("minus level",""+level);
             }
 
-            if ((position[0] == plusLevel[0]) && (position[1] == plusLevel[1]) && level <= maxUnlockedLevel && maxUnlockedLevel != 0){
+            if ((position[0] == plusLevelButton[0]) && (position[1] == plusLevelButton[1]) && level <= maxUnlockedLevel && maxUnlockedLevel != 0){
                 level++;
                 gameView.resetLevel();
                 Log.i("plus level",""+level);
             }
 
         }
-
-
 
         @Override
         public boolean onFling(MotionEvent e1,MotionEvent e2,float velocityX,float velocityY){
@@ -301,9 +299,7 @@ public class GameActivity extends Activity {
         numBlocksWideBoard = numBlocksWide - 4;//TODO minus right gap
         numBlocksHighBoard = numBlocksHigh;
 
-        if(!levelLoaded) { //NOWADDED
-            gameGrid = new int[numBlocksWide][numBlocksHigh];
-        }                  //NOWADDED
+        gameGrid = new int[numBlocksWide][numBlocksHigh];
 
         targetLineIndicator = 2; //where to place the molecule
         numberOfPhases = 8;
@@ -385,7 +381,7 @@ public class GameActivity extends Activity {
             this.isMoving = false;
         }
 
-        public boolean sameMolecule(Molecule molecule){
+        public boolean sameMolecule(Molecule targetMolecule){
 
             boolean same = true;
 
@@ -393,10 +389,10 @@ public class GameActivity extends Activity {
                 return false;
             }
 
-            for(int i = 0; i < molecule.numberOfAtoms;i++){
-                int xTarget = molecule.atoms[i].posX;
-                int yTarget = molecule.atoms[i].posY;
-                int elemTarget = molecule.atoms[i].atomIdx;
+            for(int i = 0; i < targetMolecule.numberOfAtoms;i++){
+                int xTarget = targetMolecule.atoms[i].posX;
+                int yTarget = targetMolecule.atoms[i].posY;
+                int elemTarget = targetMolecule.atoms[i].atomIdx;
                 int atomIn = gameGrid[xTarget][yTarget];
                 if (gameGrid[xTarget][yTarget] != -1){
                     if(this.atoms[atomIn].atomIdx != elemTarget){
@@ -408,6 +404,10 @@ public class GameActivity extends Activity {
                     break;
                 }
 
+            }
+
+            if (targetMolecule.numberOfAtoms == 0){
+                same = false;
             }
 
             return same;
@@ -430,10 +430,10 @@ public class GameActivity extends Activity {
 
             ourHolder = getHolder();
             paint = new Paint();
-            if (!levelLoaded) { //NOWADDED
+            //if (!levelLoaded) { //NOWADDED
                 setBoard(level);
-                levelLoaded = true; //NOWADDED
-            }
+              //  levelLoaded = true; //NOWADDED
+            //}
 
 
             dialog = new Dialog(this.getContext());
@@ -531,10 +531,6 @@ public class GameActivity extends Activity {
         }
 
         private void animateBoom() {
-        }
-
-        private void finishedGame(){
-
         }
 
         private void showCredits(){
