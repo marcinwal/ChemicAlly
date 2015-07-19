@@ -430,10 +430,8 @@ public class GameActivity extends Activity {
 
             ourHolder = getHolder();
             paint = new Paint();
-            //if (!levelLoaded) { //NOWADDED
-                setBoard(level);
-              //  levelLoaded = true; //NOWADDED
-            //}
+            setBoard(level);
+
 
 
             dialog = new Dialog(this.getContext());
@@ -552,7 +550,7 @@ public class GameActivity extends Activity {
                     TextView text1 = (TextView) dialog.findViewById(R.id.textToast1);
                     TextView text2 = (TextView) dialog.findViewById(R.id.textToast2);
 
-                    String show = level == maxLevel? "\nYou finished the game!" : "Well done!";
+                    String show = level == maxLevel? "\nYou finished the game!" : "Well done!!";
 
                     text1.setText(show);
                     text2.setText(title + ": " + formula);

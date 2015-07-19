@@ -59,10 +59,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         configDisplay();
-        //loadElements();
-        //scaleElements();
 
-        //title = new int[]{6,2,0,20,53,53,39}; old for big machines
         loadSelectedAndScale();
 
         title = new int[]{2,1,0,3,5,5,4};
