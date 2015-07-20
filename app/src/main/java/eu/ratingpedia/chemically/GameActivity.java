@@ -104,7 +104,6 @@ public class GameActivity extends Activity {
 
 
         mediaPlayer = MediaPlayer.create(this,R.raw.music2);
-        //mediaPlayer = MediaPlayer.create(this,R.raw.music3);
         mediaPlayer.setLooping(true);
         mediaPlayer.start();
 
@@ -574,7 +573,7 @@ public class GameActivity extends Activity {
             });
         }
 
-        private void showCongratulations() {
+        private void showCongratulationsPopUp() {
             if (congratulations){
                 handler.post(new Runnable() {
                     @Override
