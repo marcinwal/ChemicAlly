@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -520,6 +521,14 @@ public class GameActivity extends Activity {
         }
 
         private void saveScore() {
+            SharedPreferences shared;
+            SharedPreferences.Editor editor;
+            String dataName = "ChemicAlly";
+
+
+        }
+
+        private void loadScore(){
 
         }
 
