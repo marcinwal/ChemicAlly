@@ -525,23 +525,24 @@ public class GameActivity extends Activity {
             SharedPreferences.Editor editor;
             String dataName = "ChemicAlly";
 
-            prefs = getSharedPreferences(dataName,MODE_PRIVATE);
+            prefs = getSharedPreferences(dataName, MODE_PRIVATE);
             editor = prefs.edit();
 
             editor.putInt("Score",score);
             editor.putInt("MaxUnlockedLevel",maxUnlockedLevel);
-            editor.putInt("Level",level);
+            editor.putInt("Level", level);
             editor.commit();
 
         }
 
         private void loadScore(){
             SharedPreferences prefs;
-            SharedPreferences.Editor editor;
             String dataName = "ChemicAlly";
 
             prefs = getSharedPreferences(dataName,MODE_PRIVATE);
-            editor = prefs.edit();
+            score = prefs.getInt("Score",1);
+            maxUnlockedLevel = prefs.getInt("MaxUnlockedLevel",1);
+            level = prefs.getInt("Level",1);
 
         }
 
