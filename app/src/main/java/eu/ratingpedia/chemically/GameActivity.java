@@ -532,6 +532,7 @@ public class GameActivity extends Activity {
             editor.putInt("MaxUnlockedLevel",maxUnlockedLevel);
             editor.putInt("Level", level);
             editor.commit();
+            Log.e("Saving",""+score+maxUnlockedLevel+level);
 
         }
 
@@ -540,9 +541,11 @@ public class GameActivity extends Activity {
             String dataName = "ChemicAlly";
 
             prefs = getSharedPreferences(dataName,MODE_PRIVATE);
-            score = prefs.getInt("Score",1);
-            maxUnlockedLevel = prefs.getInt("MaxUnlockedLevel",1);
+            score = prefs.getInt("Score", 1);
+            maxUnlockedLevel = prefs.getInt("MaxUnlockedLevel", 1);
             level = prefs.getInt("Level",1);
+
+            Log.e("Loading",""+score+maxUnlockedLevel+level);
 
         }
 
