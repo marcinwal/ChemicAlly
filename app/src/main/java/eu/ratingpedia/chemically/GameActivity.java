@@ -556,7 +556,7 @@ public class GameActivity extends Activity {
         private void animateBoom() {
         }
 
-        private void showCredits(){
+        private void showCreditFinals(){
 
         }
 
