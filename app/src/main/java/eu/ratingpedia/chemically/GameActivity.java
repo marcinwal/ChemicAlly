@@ -554,10 +554,11 @@ public class GameActivity extends Activity {
         }
 
         private void animateBoom() {
+            Log.e("Animating","BOOM");
         }
 
         private void showCreditFinals(){
-
+            Log.e("Showing","Credentials");
         }
 
 
