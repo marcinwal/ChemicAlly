@@ -119,6 +119,7 @@ public class GameActivity extends Activity {
 
         configureDisplay();
 
+
         gameView = new GameView(this);
 
         setContentView(gameView);
@@ -310,6 +311,8 @@ public class GameActivity extends Activity {
                 elements[i] = Bitmap.createScaledBitmap(elements[i],
                         blockSize - targetLineIndicator, blockSize - targetLineIndicator, false);
         }
+
+
     }
 
     public class Atom {
@@ -432,6 +435,8 @@ public class GameActivity extends Activity {
             paint = new Paint();
             setBoard(level);
 
+            loadScore(); //NOWADDED
+
 
 
             dialog = new Dialog(this.getContext());
@@ -499,8 +504,8 @@ public class GameActivity extends Activity {
             }
             if (level == maxLevel){
                 level = 0;
-                showCredits();
             }
+
             level ++;
             updateScore();
             saveScore();
