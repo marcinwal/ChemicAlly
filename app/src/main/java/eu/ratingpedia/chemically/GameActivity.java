@@ -554,6 +554,10 @@ public class GameActivity extends Activity {
 
         }
 
+        private void showAdds(){
+            //showing adds
+        }
+
         private void updateScore() {
             animateBoom();
         }
