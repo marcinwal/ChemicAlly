@@ -498,8 +498,9 @@ public class GameActivity extends Activity {
         }
 
         private void newLevel(){
-            score += targetMolecule.numberOfAtoms * level;
+            //score += targetMolecule.numberOfAtoms * level;
             if (level > maxUnlockedLevel) {
+                score += targetMolecule.numberOfAtoms * level;
                 maxUnlockedLevel = level;
             }
             if (level == maxLevel){
@@ -549,6 +550,7 @@ public class GameActivity extends Activity {
             score = prefs.getInt("Score", 1);
             maxUnlockedLevel = prefs.getInt("MaxUnlockedLevel", 1);
             level = prefs.getInt("Level",1);
+            level = maxUnlockedLevel;
 
             Log.e("Loading",""+score+maxUnlockedLevel+level);
 
