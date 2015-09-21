@@ -72,7 +72,8 @@ public class GameActivity extends Activity {
     static int score = 0;
     static int level = 1;
     static int maxUnlockedLevel = 0; //level which can be loaded from start;depends on previous play
-    int maxLevel = 3;  //maximum number of levels
+    int maxLevel = 4;  //maximum number of levels
+    int howOftenRepeatAdds = 3;
 
 
     int fps;
@@ -435,7 +436,7 @@ public class GameActivity extends Activity {
             paint = new Paint();
             setBoard(level);
 
-            loadScore(); //NOWADDED
+            loadScore();
 
 
 
@@ -557,7 +558,7 @@ public class GameActivity extends Activity {
         }
 
         private void showAdds(){
-            //showing adds
+            Log.e("Adds","Showing adds");
         }
 
         private void updateScore() {
@@ -607,11 +608,14 @@ public class GameActivity extends Activity {
                     });
 
                     dialog.show();
+                    if (level % howOftenRepeatAdds == 0){
+                        showAdds();
+                    }
                 }
             });
         }
 
-        private void showCongratulationsPopUp() {
+       /* private void showCongratulationsPopUp() {
             if (congratulations){
                 handler.post(new Runnable() {
                     @Override
@@ -642,7 +646,7 @@ public class GameActivity extends Activity {
             }
             congratulations = false;
 
-        }
+        } */
 
         //drawing walls
         private void drawWalls(){

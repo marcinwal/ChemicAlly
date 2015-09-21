@@ -1,11 +1,11 @@
 xxxxxxxxxxxxxxxxxxxx
 xa       x     xxxxx
 x        x     xxxxx
-x       jxx    xxxxx
+x        xx    xxxxx
 x        JN    xxxxx
 x              xxxxx
 x    x         xxxxx
-x   nx         xxxxx
+x    x         xxxxx
 x       x      xjnxx
 x       x      xxxxx
 x       xjn    xxrxx

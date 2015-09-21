@@ -44,8 +44,10 @@ public class MainActivity extends Activity {
     int [] title;
     int titleScale = 150; //100 normal
     public static int [] selectedElements = new int[]{0,2,6,20,39,53,1,7,8,11,12,15,16,17,19,20,127,128,129,130};
-    public static String [] namesElements = new String[]{"Mi","He","C","Ca","Y","I","H","N","0",
+    public static String [] namesElements = new String[]{"Mi","He","C","Ca","Y","I","H","N","O",
+    //                                                    a  , b  , c , d  , e , f , g , h , i ,
                                                         "Na","Mg","P","S","Cl","K","Ca","Wall","Reset","-","+"};
+    //                                                    j , k  , l , m , n  , o , p  , q    ,   r   , s , t
 
 
 
@@ -186,7 +188,7 @@ public class MainActivity extends Activity {
             paint.setAlpha(100);
             Random randInt = new Random();
             for(int i = 0;i < 22;i++)
-                for(int j =0; j < 14;j++){
+                for(int j = 0; j < 14;j++){
                     int elem = randInt.nextInt(howMany-1)+offset;
                     canvas.drawBitmap(elements[elem], i * blockSize / 2, j * blockSize / 2, paint);
                 }
