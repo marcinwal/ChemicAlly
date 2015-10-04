@@ -72,7 +72,7 @@ public class GameActivity extends Activity {
     static int score = 0;
     static int level = 1;
     static int maxUnlockedLevel = 0; //level which can be loaded from start;depends on previous play
-    int maxLevel = 4;  //maximum number of levels
+    int maxLevel = 10;  //maximum number of levels
     int howOftenRepeatAdds = 3;
 
 
